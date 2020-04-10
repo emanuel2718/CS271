@@ -1,0 +1,14 @@
+.vs/
+Add*
+Debug/
+*.lst
+*.sdf
+*.sln
+*.v12.*
+*.vcxproj
+*.vcxproj.*
+Release/
+Struct*
+
+
+

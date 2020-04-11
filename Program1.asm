@@ -2,7 +2,7 @@ TITLE Program 1     (Program1.asm)
 
 ; Author                : Emanuel Ramirez Alsina
 ; Date Created          : 04/06/2020
-; Last Modified:        : 04/10/2020
+; Last Modified:        : 04/11/2020
 ; OSU email address:    : ramieman@oregonstate.edu
 ; Course number/section : 271/400
 ; Project Number        : 01
@@ -49,7 +49,8 @@ INCLUDE Irvine32.inc
     EC1response     DWORD   ?           ;Will store the user decision (1 as 'YES' or 0 as 'NO')
 
     ; Extra Credit 2
-    ;EC2desc         BYTE    "**EC2: Will check if the numbers are in non-descending order", 0
+    EC2desc         BYTE    "**EC2: Program will check if the numbers are in descending order", 0
+    EC2warning      BYTE    "Numbers must be in descending order: A > B > C.", 0
 
 
     exitMessage     BYTE    "That's all for today, until next time.", 0
@@ -62,45 +63,55 @@ main PROC
     ; Program's Introduction
     mov     edx, OFFSET intro           ;Get the address of intro into edx register.
     call    WriteString                 ;Print the introduction to the user.
-    call    CrlF
+    call    CRLF
 
-    ; Extra credit
+    ; Extra credit 1
     mov     edx, OFFSET EC1desc         ;Get the extra credit #1 description message
     call    WriteString                 ;Extra Credit #1 Message
-    call    CrlF
-    call    CrlF
+    call    CRLF
+
+    ; Extra credit 2
+    mov     edx, OFFSET EC2desc         ;Get the extra credit #2 description message
+    call    WriteString                 ;Extra Credit #1 Message
+    call    CRLF
+    call    CRLF
 
 
     ; Program's Instructions:
     mov     edx, OFFSET instruction     ;Get the address of instruction into edx register.
     call    WriteString                 ;Print the instruction of the program to the user.
-    call    CrlF
+    call    CRLF
 
 
 init:
 
     ; Get the first number from the user and asign it to the num1 variable
-    call    CrlF
+    call    CRLF
     mov     edx, OFFSET input1
     call    WriteString
     call    ReadInt
     mov     num1, eax
-    call    CrlF
 
     ; Get the second number from the user and asign it to the num2 variable
+    call    CRLF
     mov     edx, OFFSET input2
     call    WriteString
     call    ReadInt    
     mov     num2, eax
-    call    CrlF
+    mov     eax, num2
+    cmp     eax, num1
+    jg      numberWarning               ;Jump to numberWarning if num2 > num1
 
     ; Get the third number from the user and asign it to the num3 variable
+    call    CRLF
     mov     edx, OFFSET input3
     call    WriteString
     call    ReadInt
     mov     num3, eax
-    call    CrlF
-    call    CrlF
+    mov     eax, num3
+    cmp     eax, num2
+    jg      numberWarning               ;Jump to numberWarning if num3 > num2
+    jle     calculations
 
 
 calculations:
@@ -154,7 +165,7 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax, sumAB                  ;Move the value of sumAB into eax
     call    WriteDec                    ;Print the value of sumAB
-    call    CrlF
+    call    CRLF
 
     ; Print the (A - B) result to the user.
     mov     eax, num1                   ;Move num1 into eax register
@@ -167,7 +178,7 @@ calculations:
     call    WriteString                 
     mov     eax, diffAB                 ;Move the value of diffAB into eax
     call    WriteDec                    ;Print the value of diffAB
-    call    CrlF
+    call    CRLF
 
     ; Print the (A + C) result to the user.
     mov     eax, num1                   ;Move num1 into eax register
@@ -180,7 +191,7 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax, sumAC                  ;Move the value of sumAC into eax
     call    WriteDec                    ;Print the value of sumAC
-    call    CrlF
+    call    CRLF
 
     ; Print the (A - C) result to the user.
     mov     eax, num1                   ;Move num1 into eax register
@@ -193,7 +204,7 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax, diffAC                 ;Move the value of diffAC into eax
     call    WriteDec                    ;Print the value of diffAC
-    call    CrlF
+    call    CRLF
 
     ; Print the (B + C) result to the user.
     mov     eax, num2                   ;Move num2 into eax register
@@ -206,7 +217,7 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax,sumBC                   ;Move the value of sumBC into eax
     call    WriteDec                    ;Print the value of sumBC
-    call    CrlF
+    call    CRLF
 
     ; Print the (B - C) result to the user.
     mov     eax, num2                   ;Move num2 into eax register
@@ -219,7 +230,7 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax, diffBC                 ;Move the value of diffBC into eax
     call    WriteDec                    ;Print the value of diffBC
-    call    CrlF
+    call    CRLF
 
     ; Print the (A + B + C) result to the user.
     mov     eax, num1                   ;Move num1 into eax register
@@ -236,11 +247,23 @@ calculations:
     call    WriteString                 ;Print "=" into the console
     mov     eax, sumABC                 ;Move the value of sumABC into eax
     call    WriteDec                    ;Print the value of sumABC 
-    call    CrlF
-    call    CrlF
+    call    CRLF
+    call    CRLF
+    jmp     finalMessage                ;Jump to the program's final message: Continue or quit.
 
 
-jumpTOinit:
+numberWarning:
+    ;Prompt the error message to the user (numbers must be in descending order)
+    call    CRLF
+    mov     edx, OFFSET EC2warning
+    call    WriteString
+    call    CRLF
+    call    CRLF
+    jmp     finalMessage
+
+
+
+finalMessage:
 
     ; Prompt the user to decide whether to continue or quit the program.
     mov     edx, OFFSET EC1prompt
@@ -252,11 +275,12 @@ jumpTOinit:
 
 
     ; Exit the program with a message; User chose to quit the program.
-    call    CrlF
+    call    CRLF
     mov     edx, OFFSET exitMessage
     call    WriteString
-    call    CrlF
-    call    CrlF
+    call    CRLF
+    call    CRLF
+
 
 
 	exit	; exit to operating system

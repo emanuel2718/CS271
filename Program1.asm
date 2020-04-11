@@ -17,6 +17,7 @@ INCLUDE Irvine32.inc
     ; Introduction of the program and instructions of the program.
     intro           BYTE    "Hello. This is Program 01 made by Emanuel Ramirez Alsina:", 0
     instruction     BYTE    "Enter 3 numbers A > B > C, and I'll show you the sums and differences.", 0
+
     addSign         BYTE    " + ",0
     subSign         BYTE    " - ",0
     eqSign          BYTE    " = ",0
@@ -42,45 +43,67 @@ INCLUDE Irvine32.inc
 
     sumABC          DWORD   ?           ;Calculates the result of (B - C)
 
+    ; Extra Credit 1
+    EC1desc         BYTE    "**EC1: Will repeat until the user decides to quit", 0
+    EC1prompt       BYTE    "Would you like to continue using this program? Press 1 for [YES]. Press 0 for [NO]: ", 0
+    EC1response     DWORD   ?           ;Will store the user decision (1 as 'YES' or 0 as 'NO')
+
+    ; Extra Credit 2
+    ;EC2desc         BYTE    "**EC2: Will check if the numbers are in non-descending order", 0
+
+
     exitMessage     BYTE    "That's all for today, until next time.", 0
-    ;showResults     BYTE    "The following are the results of the calculations from the three numbers provided:", 0
 
 
 
 .code
 main PROC
 
-    ; Introduction
+    ; Program's Introduction
     mov     edx, OFFSET intro           ;Get the address of intro into edx register.
     call    WriteString                 ;Print the introduction to the user.
     call    CrlF
+
+    ; Extra credit
+    mov     edx, OFFSET EC1desc         ;Get the extra credit #1 description message
+    call    WriteString                 ;Extra Credit #1 Message
+    call    CrlF
     call    CrlF
 
-    ; Instruction
+
+    ; Program's Instructions:
     mov     edx, OFFSET instruction     ;Get the address of instruction into edx register.
     call    WriteString                 ;Print the instruction of the program to the user.
     call    CrlF
+
+
+init:
+
+    ; Get the first number from the user and asign it to the num1 variable
     call    CrlF
-
-
-target:    
-    mov     edx, OFFSET input1          ;Assign the offset of the first number into edx
+    mov     edx, OFFSET input1
     call    WriteString
     call    ReadInt
-    mov     num1, eax                   ;Assign what's on register eax into num1
+    mov     num1, eax
     call    CrlF
-    mov     edx, OFFSET input2          ;Assign the offset of the second number into edx
+
+    ; Get the second number from the user and asign it to the num2 variable
+    mov     edx, OFFSET input2
     call    WriteString
     call    ReadInt    
-    mov     num2, eax                   ;Assign what's on register eax into num2
+    mov     num2, eax
     call    CrlF
-    mov     edx, OFFSET input3          ;Assign the offset of the third number into edx
+
+    ; Get the third number from the user and asign it to the num3 variable
+    mov     edx, OFFSET input3
     call    WriteString
     call    ReadInt
-    mov     num3, eax                   ;Assign what's on register eax into num3
+    mov     num3, eax
     call    CrlF
     call    CrlF
 
+
+calculations:
 
     ; Calculate the sum (A + B)
     mov     eax, num1                   ;Move num1 into eax register
@@ -216,15 +239,27 @@ target:
     call    CrlF
     call    CrlF
 
-    mov     edx, OFFSET exitMessage     ;Move exitMessage offset into edx register
-    call    WriteString                 ;Print the exitMessage to the console
+
+jumpTOinit:
+
+    ; Prompt the user to decide whether to continue or quit the program.
+    mov     edx, OFFSET EC1prompt
+    call    WriteString
+    call    ReadInt
+    mov     EC1response, eax
+    cmp     eax, 1
+    je      init                        ;Jump back to the top; User chose to continue. JumpEqual is true.
+
+
+    ; Exit the program with a message; User chose to quit the program.
+    call    CrlF
+    mov     edx, OFFSET exitMessage
+    call    WriteString
     call    CrlF
     call    CrlF
 
 
 	exit	; exit to operating system
 main ENDP
-
-; (insert additional procedures here)
 
 END main

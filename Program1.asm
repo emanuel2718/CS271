@@ -15,7 +15,7 @@ INCLUDE Irvine32.inc
 
 .data
     ; Introduction of the program and instructions of the program.
-    intro           BYTE    "Hello, this is Program 01 made by Emanuel Ramirez Alsina.", 0
+    intro           BYTE    "Hello. This is Program 01 made by Emanuel Ramirez Alsina:", 0
     instruction     BYTE    "Enter 3 numbers A > B > C, and I'll show you the sums and differences.", 0
     addSign         BYTE    " + ",0
     subSign         BYTE    " - ",0
@@ -216,8 +216,9 @@ target:
     call    CrlF
     call    CrlF
 
-    mov     edx, OFFSET exitMessage
-    call    WriteString
+    mov     edx, OFFSET exitMessage     ;Move exitMessage offset into edx register
+    call    WriteString                 ;Print the exitMessage to the console
+    call    CrlF
     call    CrlF
 
 

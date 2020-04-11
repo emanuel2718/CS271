@@ -42,8 +42,8 @@ INCLUDE Irvine32.inc
 
     sumABC          DWORD   ?           ;Calculates the result of (B - C)
 
-    showResults     BYTE    "The following are the results of the calculations from the three numbers provided:", 0
     exitMessage     BYTE    "That's all for today, until next time.", 0
+    ;showResults     BYTE    "The following are the results of the calculations from the three numbers provided:", 0
 
 
 
@@ -59,6 +59,7 @@ main PROC
     ; Instruction
     mov     edx, OFFSET instruction     ;Get the address of instruction into edx register.
     call    WriteString                 ;Print the instruction of the program to the user.
+    call    CrlF
     call    CrlF
 
 
@@ -77,6 +78,7 @@ target:
     call    WriteString
     call    ReadInt
     mov     num3, eax                   ;Assign what's on register eax into num3
+    call    CrlF
     call    CrlF
 
 
@@ -211,6 +213,11 @@ target:
     call    WriteString                 ;Print "=" into the console
     mov     eax, sumABC                 ;Move the value of sumABC into eax
     call    WriteDec                    ;Print the value of sumABC 
+    call    CrlF
+    call    CrlF
+
+    mov     edx, OFFSET exitMessage
+    call    WriteString
     call    CrlF
 
 

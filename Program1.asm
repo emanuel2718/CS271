@@ -44,14 +44,16 @@ INCLUDE Irvine32.inc
     sumABC          DWORD   ?           ;Calculates the result of (B - C)
 
     ; Extra Credit 1
-    EC1desc         BYTE    "**EC1: Will repeat until the user decides to quit", 0
+    EC1desc         BYTE    "**EC: Will repeat until the user decides to quit", 0
     EC1prompt       BYTE    "Would you like to continue using this program? Press 1 for [YES]. Press 0 for [NO]: ", 0
     EC1response     DWORD   ?           ;Will store the user decision (1 as 'YES' or 0 as 'NO')
 
     ; Extra Credit 2
-    EC2desc         BYTE    "**EC2: Program will check if the numbers are in descending order", 0
-    EC2warning      BYTE    "Numbers must be in descending order: A > B > C.", 0
+    EC2desc         BYTE    "**EC: Program will check if the numbers are in descending order", 0
+    EC2warning      BYTE    "ERROR: Numbers must be provided in descending order (A > B > C).", 0
 
+    ; Extra Credit 3
+    EC3desc         BYTE    "**EC3: The program will be able to handle negative results (B-A, C-A, C-B, C-B-A)", 0
 
     exitMessage     BYTE    "That's all for today, until next time.", 0
 

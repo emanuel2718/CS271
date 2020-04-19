@@ -32,11 +32,12 @@ RANGELIMIT EQU <46>
     errorMessage    BYTE    "Out of range. Enter a number in [1 .. 46]", 0
 
 
+    fiveSpaces      BYTE    "     ", 0
     userName        DWORD   33 DUP(0)
     userNumber      DWORD   ?
     fibNumber       DWORD   ?
-    fib1            DWORD   ?
-    fib2            DWORD   ?
+    firstFib        DWORD   ?
+    secondFib       DWORD   ?
     columns         DWORD   ?
 
 
@@ -46,7 +47,9 @@ RANGELIMIT EQU <46>
 
 
 
-    exitMessage     BYTE    "Until the next one, goodbye.", 0
+
+    certified       BYTE    "Results certified by Emanuel Ramirez", 0
+    exitMessage     BYTE    "Goodbye, ", 0
 
 
 .code
@@ -118,12 +121,12 @@ checkUpperLimit:
     mov     ebx, RANGELIMIT
     cmp     eax, ebx
     jg      throwError
-    jmp     calculations
+    jmp     setup
 
 
 
 
-;Display Error message to the user.
+; Display Error message to the user.
 throwError:
 
     mov     edx, OFFSET errorMessage
@@ -133,8 +136,50 @@ throwError:
     jmp     userInput
 
 
-calculations:
+setup:
+    mov     ebp, 0
+    mov     edx, 1
+    mov     ebx, edx
+    mov     ecx, userNumber
 
+calculate:
+    mov     eax, edx
+    mov     ebp, eax
+    mov     edx, ebx
+    add     ebx, ebp
+    call    WriteDec
+    call    CRLF
+    Loop    calculate
+
+
+
+
+; Display Fibonacci numbers
+;displayFibs:
+;
+;    ; Display the first term
+;    mov     eax, 1
+;    mov     firstFib, eax
+;    call    WriteDec
+;    mov     edx, OFFSET fiveSpaces
+;    call    WriteString
+;    jmp     checkIfOver
+;
+;    ; Display the second term
+;    mov     eax, 1
+;    mov     secondFib, eax
+;    call    WriteDec
+;    mov     edx, OFFSET fiveSpaces
+;    call    WriteString
+;    jmp     checkIfOver
+;
+;
+
+
+checkIfOver:
+    mov     eax, 1
+    cmp     eax, userNumber
+    jz      finalMessage
 
 
 
@@ -142,6 +187,16 @@ calculations:
 
 
 
+finalMessage:
+    call    CRLF
+    mov     edx, OFFSET certified
+    call    WriteString
+    call    CRLF
+    mov     edx, OFFSET exitMessage
+    call    WriteString
+    mov     edx, OFFSET userName
+    call    WriteString
+    call    CRLF
 
 
 

@@ -11,7 +11,7 @@ TITLE Program 2     (Program2.asm)
 
 INCLUDE Irvine32.inc
 
-LIMIT EQU <46>
+RANGELIMIT EQU <46>
 
 .data
     ; Introduction and instructions of the program
@@ -21,13 +21,15 @@ LIMIT EQU <46>
     ;intro          BYTE    "This is Program 02 made by Emanuel Ramirez", 0
     ;instruction    BYTE    "This program will calculate Fibonacci numbers", 0
 
-    askName         BYTE    "What's your name?", 0
+    askName         BYTE    "What's your name? ", 0
     sayHello        BYTE    "Greetings, ", 0
 
-    askFibTerms     BYTE    "How many Fibonacci terms do you want?", 0
+    fibPrompt       BYTE    "Enter the number of Fibonacci terms to display ", 0
     adviseUser      BYTE    "Number must be an integer in the range [1..46]", 0
 
-    error           BYTE    "Out of range. Enter a number in [1 .. 46]", 0
+    askFibTerms     BYTE    "How many Fibonacci terms do you want? ", 0
+
+    errorMessage    BYTE    "Out of range. Enter a number in [1 .. 46]", 0
 
 
     userName        DWORD   33 DUP(0)
@@ -45,7 +47,6 @@ LIMIT EQU <46>
 
 
     exitMessage     BYTE    "Until the next one, goodbye.", 0
-
 
 
 .code
@@ -75,6 +76,70 @@ main PROC
     mov     edx, OFFSET userName
     call    WriteString
     call    CRLF
+
+
+    ;Prompt user for Fibonacci terms to be displayed.
+    mov     edx, OFFSET fibPrompt
+    call    WriteString
+    call    WriteString
+    mov     edx, OFFSET adviseUser
+    call    WriteString
+    call    CRLF
+    call    CRLF
+    jmp     userInput
+
+
+; Gets and validates user input
+userInput:
+
+    mov     edx, OFFSET fibPrompt
+    call    WriteString
+    call    ReadInt
+    call    CRLF
+    mov     userNumber, eax
+    jmp     checkLowerLimit
+    
+; Checks the lower limit in the fibonacci range of [1 .. 46]
+checkLowerLimit:
+    
+    ;TODO:  Check this mov     ebx, 1
+
+    mov     eax, userNumber
+    mov     ebx, 1
+    cmp     eax, ebx
+    jge     checkUpperLimit
+    jmp throwError
+
+
+; Checks the upper limit in the fibonacci range of [1 .. 46]
+checkUpperLimit:
+    mov     eax, userNumber
+    mov     ebx, RANGELIMIT
+    cmp     eax, ebx
+    jg      throwError
+    jmp     calculations
+
+
+
+
+;Display Error message to the user.
+throwError:
+
+    mov     edx, OFFSET errorMessage
+    call    WriteString
+    call    CRLF
+    jmp     userInput
+
+
+calculations:
+
+
+
+
+    
+
+
+
 
 
 

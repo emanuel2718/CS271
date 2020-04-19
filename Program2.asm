@@ -76,12 +76,13 @@ main PROC
     mov     edx, OFFSET userName
     call    WriteString
     call    CRLF
+    call    CRLF
 
 
     ;Prompt user for Fibonacci terms to be displayed.
     mov     edx, OFFSET fibPrompt
     call    WriteString
-    call    WriteString
+    call    CRLF
     mov     edx, OFFSET adviseUser
     call    WriteString
     call    CRLF
@@ -92,7 +93,7 @@ main PROC
 ; Gets and validates user input
 userInput:
 
-    mov     edx, OFFSET fibPrompt
+    mov     edx, OFFSET askFibTerms
     call    WriteString
     call    ReadInt
     call    CRLF
@@ -127,6 +128,7 @@ throwError:
 
     mov     edx, OFFSET errorMessage
     call    WriteString
+    call    CRLF
     call    CRLF
     jmp     userInput
 

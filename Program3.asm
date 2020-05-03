@@ -102,8 +102,8 @@ getNumberInput:
     mov             inputNumber, eax
 
     ; Check for a positive number
-    cmp             inputNumber, upperLimitB
-    jg              printResults
+    cmp             inputNumber, 0
+    jns              printResults ; SIGN flag
 
     ; Verify input range validity
     cmp             inputNumber, lowerLimitA

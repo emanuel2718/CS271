@@ -43,14 +43,25 @@ INCLUDE Irvine32.inc
     
     exitMessage     BYTE    "We have to stop meeting like this. Farewell, ", 0
 
-    ; Useful values initializations
+    ; Important values variables
+    userName        BYTE    50 DUP(0)
 
-    ; Goobye messages
+    sum             SDWORD  0
+    maxNumber       SDWORD  0
+    minNumber       SDWORD  0
 
 
 .code
 main PROC
 
+    ; Introduction
+    mov             edx, OFFSET welcome
+    call            WriteString
+    call            CRLF
+
+
+
+exit
 main ENDP
 
 END main

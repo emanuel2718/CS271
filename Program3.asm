@@ -2,7 +2,7 @@ TITLE Program 3     (Program3.asm)
 
 ; Author                : Emanuel Ramirez Alsina
 ; Date Created          : 04/26/2020
-; Last Modified:        : 05/02/2020
+; Last Modified:        : 05/03/2020
 ; OSU email address:    : ramieman@oregonstate.edu
 ; Course number/section : 271/400
 ; Project Number        : 03
@@ -89,21 +89,50 @@ main PROC
 getNumberInput:
     mov             edx, OFFSET promptNumber
     call            WriteString
-    mov             eax, numCounter
-    inc             numCounter
     ;call            WriteDec
     ;mov             eax, inputNumber
     call            ReadInt
     mov             inputNumber, eax
+    ;;mov             eax, numCounter
 
     ; Check if it's a positive number
     cmp             inputNumber, upperLimitB
-    jg              printIvalidInfo
+    jg              printResults
+    cmp             inputNumber, lowerLimitA
+    jl              printResults
+
+    inc             numCounter
+    jmp             getNumberInput
+
+    ;jg              printInvalidInfo
+    ;cmp             inputNumber, lowerLimitA
+    ;jg
+
+    ;jmp             goodbye
+
+
+printResults:
+    mov             edx, OFFSET validInput1
+    call            WriteString
+    mov             eax, numCounter
+    call            WriteDec
+    mov             edx, OFFSET validInput2
+    call            WriteString
+    call            CRLF
     jmp             goodbye
 
+changeMaxNumber:
+    ;mov             ebx, maxNumber
+
+changeMinNumber:
 
 
-printIvalidInfo:
+checkInsideRange:
+
+
+
+; Number is negative and outside of range
+printInvalidInfo:
     mov             edx, OFFSET badInput
     call            WriteString
     call            CRLF

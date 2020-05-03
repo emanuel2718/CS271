@@ -97,7 +97,7 @@ getNumberInput:
 
     ; Check if it's a positive number
     cmp             inputNumber, upperLimitB
-    jg              printResults
+    js              printResults
 
     cmp             inputNumber, lowerLimitA
     jl              printInvalidInfo

@@ -75,6 +75,15 @@ main PROC
     call            CRLF
     call            CRLF
 
+    ; Print instructions
+    mov             edx, OFFSET instruction
+    call            WriteString
+    call            CRLF
+    mov             edx, OFFSET exitInstruct
+    call            WriteString
+    call            CRLF
+
+
 
 
 exit

@@ -28,9 +28,9 @@ INCLUDE Irvine32.inc
     input3          BYTE    "Third number: ", 0
 
     ; User input numbers.
-    num1            DWORD   ?           ;User input: Integer #1
-    num2            DWORD   ?           ;User input: Integer #2
-    num3            DWORD   ?           ;User input: Integer #3
+    num1            DWORD   ?
+    num2            DWORD   ?
+    num3            DWORD   ?
 
     ; Calculation variables
     sumAB           DWORD   ?           ;Calculates the result of (A + B)
@@ -63,25 +63,25 @@ INCLUDE Irvine32.inc
 main PROC
 
     ; Program's Introduction
-    mov     edx, OFFSET intro           ;Get the address of intro into edx register.
-    call    WriteString                 ;Print the introduction to the user.
+    mov     edx, OFFSET intro
+    call    WriteString
     call    CRLF
 
     ; Extra credit 1
-    mov     edx, OFFSET EC1desc         ;Get the extra credit #1 description message
-    call    WriteString                 ;Extra Credit #1 Message
+    mov     edx, OFFSET EC1desc
+    call    WriteString
     call    CRLF
 
     ; Extra credit 2
-    mov     edx, OFFSET EC2desc         ;Get the extra credit #2 description message
-    call    WriteString                 ;Extra Credit #1 Message
+    mov     edx, OFFSET EC2desc
+    call    WriteString
     call    CRLF
     call    CRLF
 
 
     ; Program's Instructions:
-    mov     edx, OFFSET instruction     ;Get the address of instruction into edx register.
-    call    WriteString                 ;Print the instruction of the program to the user.
+    mov     edx, OFFSET instruction
+    call    WriteString
     call    CRLF
 
 
@@ -119,139 +119,139 @@ init:
 calculations:
 
     ; Calculate the sum (A + B)
-    mov     eax, num1                   ;Move num1 into eax register
-    add     eax, num2                   ;num1 + num 2
-    mov     sumAB, eax                  ;Save the result of the sum in (sumAB)
+    mov     eax, num1
+    add     eax, num2
+    mov     sumAB, eax
 
     ; Calculate the difference (A - B)
-    mov     eax, num1                   ;Move num1 into eax register
-    sub     eax, num2                   ;num1 - num 2
-    mov     diffAB, eax                 ;Save the result of the difference in (diffAB)
+    mov     eax, num1
+    sub     eax, num2
+    mov     diffAB, eax
 
     ; Calculate the sum (A + C)
-    mov     eax, num1                   ;Move num1 into eax register
-    add     eax, num3                   ;num1 + num3
-    mov     sumAC, eax                  ;Save the result of the sum in (sumAC)
+    mov     eax, num1
+    add     eax, num3
+    mov     sumAC, eax
 
     ; Calculate the difference (A - C)
-    mov     eax, num1                   ;Move num1 into eax register
-    sub     eax, num3                   ;num1 - num3
-    mov     diffAC, eax                 ;Save the result of the difference in (diffAC)
+    mov     eax, num1
+    sub     eax, num3
+    mov     diffAC, eax
 
     ; Calculate the sum (B + C)
-    mov     eax, num2                   ;Move num2 into eax register
-    add     eax, num3                   ;num2 + num3
-    mov     sumBC, eax                  ;Save the result of the sum in (sumBC)
+    mov     eax, num2
+    add     eax, num3
+    mov     sumBC, eax
 
     ; Calculate the difference (B - C)
-    mov     eax, num2                   ;Move num2 into eax register
-    sub     eax, num3                   ;num2 + num3
-    mov     diffBC, eax                 ;Save the result of the difference in (diffBC)
+    mov     eax, num2
+    sub     eax, num3
+    mov     diffBC, eax
 
     ; Calculate the sum (A + B + C)
-    mov     eax, num1                   ;Move num1 into eax register
-    add     eax, num2                   ;num1 + num2
-    add     eax, num3                   ;(num1 + num2) + num3
-    mov     sumABC, eax                 ;Save the result of the sum in (sumABC)
+    mov     eax, num1
+    add     eax, num2
+    add     eax, num3
+    mov     sumABC, eax
 
 
 
     ; Print the (A + B) result to the user.
-    mov     eax, num1                   ;Move num1 into eax register
-    call    WriteDec                    ;Print num1 into the console
-    mov     edx, OFFSET addSign         ;Move the offset of "+" into edx
-    call    WriteString                 ;Print "+" into the console
-    mov     eax, num2                   ;Move num2 into eax register
-    call    WriteDec                    ;Print num2 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax, sumAB                  ;Move the value of sumAB into eax
-    call    WriteDec                    ;Print the value of sumAB
+    mov     eax, num1
+    call    WriteDec
+    mov     edx, OFFSET addSign
+    call    WriteString
+    mov     eax, num2
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, sumAB
+    call    WriteDec
     call    CRLF
 
     ; Print the (A - B) result to the user.
-    mov     eax, num1                   ;Move num1 into eax register
-    call    WriteDec                    ;Print num1 into the console
-    mov     edx, OFFSET subSign         ;Move the offset of "-" into edx
-    call    WriteString                 ;Print "-" into the console
-    mov     eax, num2                   ;Move num2 into eax register
-    call    WriteDec                    ;Print num2 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 
-    mov     eax, diffAB                 ;Move the value of diffAB into eax
-    call    WriteDec                    ;Print the value of diffAB
+    mov     eax, num1
+    call    WriteDec
+    mov     edx, OFFSET subSign
+    call    WriteString
+    mov     eax, num2
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, diffAB
+    call    WriteDec
     call    CRLF
 
     ; Print the (A + C) result to the user.
-    mov     eax, num1                   ;Move num1 into eax register
-    call    WriteDec                    ;Print num1 into the console
-    mov     edx, OFFSET addSign         ;Move the offset of "+" into edx
-    call    WriteString                 ;Print "+" into the console
-    mov     eax, num3                   ;Move num3 into eax register
-    call    WriteDec                    ;Print num3 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax, sumAC                  ;Move the value of sumAC into eax
-    call    WriteDec                    ;Print the value of sumAC
+    mov     eax, num1
+    call    WriteDec
+    mov     edx, OFFSET addSign
+    call    WriteString
+    mov     eax, num3
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, sumAC
+    call    WriteDec
     call    CRLF
 
     ; Print the (A - C) result to the user.
-    mov     eax, num1                   ;Move num1 into eax register
-    call    WriteDec                    ;Print num1 into the console
-    mov     edx, OFFSET subSign         ;Move the offset of "-" into edx
-    call    WriteString                 ;Print "-" into the console
-    mov     eax, num3                   ;Move num3 into eax register
-    call    WriteDec                    ;Print num3 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax, diffAC                 ;Move the value of diffAC into eax
-    call    WriteDec                    ;Print the value of diffAC
+    mov     eax, num1
+    call    WriteDec
+    mov     edx, OFFSET subSign
+    call    WriteString
+    mov     eax, num3
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, diffAC
+    call    WriteDec
     call    CRLF
 
     ; Print the (B + C) result to the user.
-    mov     eax, num2                   ;Move num2 into eax register
-    call    WriteDec                    ;Print num2 into the console
-    mov     edx, OFFSET addSign         ;Move the offset of "+" into edx
-    call    WriteString                 ;Print "+" into the console
-    mov     eax, num3                   ;Move num3 into eax register
-    call    WriteDec                    ;Print num3 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax,sumBC                   ;Move the value of sumBC into eax
-    call    WriteDec                    ;Print the value of sumBC
+    mov     eax, num2
+    call    WriteDec
+    mov     edx, OFFSET addSign
+    call    WriteString
+    mov     eax, num3
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax,sumBC
+    call    WriteDec
     call    CRLF
 
     ; Print the (B - C) result to the user.
-    mov     eax, num2                   ;Move num2 into eax register
-    call    WriteDec                    ;Print num2 into the console
-    mov     edx, OFFSET subSign         ;Move the offset of "-" into edx
-    call    WriteString                 ;Print "-" into the console
-    mov     eax, num3                   ;Move num3 into eax register
-    call    WriteDec                    ;Print num3 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax, diffBC                 ;Move the value of diffBC into eax
-    call    WriteDec                    ;Print the value of diffBC
+    mov     eax, num2
+    call    WriteDec
+    mov     edx, OFFSET subSign
+    call    WriteString
+    mov     eax, num3
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, diffBC
+    call    WriteDec
     call    CRLF
 
     ; Print the (A + B + C) result to the user.
-    mov     eax, num1                   ;Move num1 into eax register
-    call    WriteDec                    ;Print num1 into the console
-    mov     edx, OFFSET addSign         ;Move the offset of "+" into edx
-    call    WriteString                 ;Print "+" into the console
-    mov     eax, num2                   ;Move num2 into eax register
-    call    WriteDec                    ;Print num2 into the console
-    mov     edx, OFFSET addSign         ;Move the offset of "+" into edx
-    call    WriteString                 ;Print "+" into the console
-    mov     eax, num3                   ;Move num3 into eax register
-    call    WriteDec                    ;Print num3 into the console
-    mov     edx, OFFSET eqSign          ;Move the offset of "=" into edx
-    call    WriteString                 ;Print "=" into the console
-    mov     eax, sumABC                 ;Move the value of sumABC into eax
-    call    WriteDec                    ;Print the value of sumABC 
+    mov     eax, num1
+    call    WriteDec
+    mov     edx, OFFSET addSign
+    call    WriteString
+    mov     eax, num2
+    call    WriteDec
+    mov     edx, OFFSET addSign
+    call    WriteString
+    mov     eax, num3
+    call    WriteDec
+    mov     edx, OFFSET eqSign
+    call    WriteString
+    mov     eax, sumABC
+    call    WriteDec
     call    CRLF
     call    CRLF
-    jmp     finalMessage                ;Jump to the program's final message: Continue or quit.
+    jmp     finalMessage
 
 
 numberWarning:
@@ -273,7 +273,7 @@ finalMessage:
     call    ReadInt
     mov     EC1response, eax
     cmp     eax, 1
-    je      init                        ;Jump back to the top; User chose to continue. JumpEqual is true.
+    je      init
 
 
     ; Exit the program with a message; User chose to quit the program.

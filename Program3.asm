@@ -45,6 +45,9 @@ INCLUDE Irvine32.inc
     noInputMessage  BYTE    "I received no input from human. Sad machine is sad", 0
     exitMessage     BYTE    "We have to stop meeting like this. Farewell, ", 0
 
+    ; Extra Credit 1
+    extraCredit     BYTE    "**EC: Number the lines during user input", 0
+    lineDot         BYTE    ". ", 0
 
     ; User name variable
     userName        BYTE    64 DUP(0)
@@ -57,7 +60,7 @@ INCLUDE Irvine32.inc
     maxNumber       SDWORD  -99
     minNumber       SDWORD  0
     inputNumber     SDWORD  ? ; The current user input
-
+    
 
 
 .code
@@ -66,6 +69,10 @@ main PROC
     ; Introduction
     mov             edx, OFFSET welcome
     call            WriteString
+    call            CRLF
+    mov             edx, OFFSET extraCredit
+    call            WriteString
+    call            CRLF
     call            CRLF
 
     ; Get user name
@@ -95,7 +102,11 @@ main PROC
 ; Get the number from the user and delegate work
 getNumberInput:
 
-    ; Prompt the user for a number
+    ; Prompt the user for a number plus Extra Credit
+    mov             eax, numCounter
+    call            WriteDec
+    mov             edx, OFFSET lineDot
+    call            WriteString
     mov             edx, OFFSET promptNumber
     call            WriteString
     call            ReadInt

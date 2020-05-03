@@ -48,7 +48,7 @@ INCLUDE Irvine32.inc
 
     numCounter      DWORD   0
     sum             SDWORD  0
-    maxNumber       SDWORD  0
+    maxNumber       SDWORD  -99
     minNumber       SDWORD  0
     inputNumber     SDWORD  ?
 
@@ -103,6 +103,10 @@ getNumberInput:
     jl              printInvalidInfo
     cmp             inputNumber, upperLimitA
     jg              checkRangeLimit
+    cmp             eax, maxNumber
+    jg              changeMaxNumber
+    cmp             eax, minNumber
+    jl              changeMinNumber
 
     
 
@@ -114,6 +118,11 @@ incrementCounter:
 checkRangeLimit:
     cmp             inputNumber, lowerLimitB
     jl              printInvalidInfo 
+    cmp             eax, maxNumber
+    jg              changeMaxNumber
+    cmp             eax, minNumber
+    jl              changeMinNumber
+    ;;jmp             incrementCounter
     jmp             incrementCounter
 
 
@@ -125,12 +134,29 @@ printResults:
     mov             edx, OFFSET validInput2
     call            WriteString
     call            CRLF
+    mov             edx, OFFSET maxMessage
+    call            WriteString
+    mov             eax, maxNumber
+    call            WriteInt
+    call            CRLF
+    mov             edx, OFFSET minMessage
+    call            WriteString
+    mov             eax, minNumber
+    call            WriteInt
+    call            CRLF
     jmp             goodbye
 
 changeMaxNumber:
-    ;mov             ebx, maxNumber
+    mov             eax, inputNumber
+    mov             maxNumber, eax
+    cmp             eax, minNumber
+    jl              changeMinNumber
+    jmp             incrementCounter
 
 changeMinNumber:
+    mov             eax, inputNumber
+    mov             minNumber, eax
+    jmp             incrementCounter
 
 
 checkInsideRange:

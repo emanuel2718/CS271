@@ -49,6 +49,7 @@ INCLUDE Irvine32.inc
     sum             SDWORD  0
     maxNumber       SDWORD  0
     minNumber       SDWORD  0
+    inputNumber     SDWORD  ?
 
 
 .code
@@ -83,7 +84,12 @@ main PROC
     call            WriteString
     call            CRLF
 
-
+getNumberInput:
+    mov             edx, OFFSET promptNumber
+    call            WriteString
+    mov             eax, inputNumber
+    call            ReadInt
+    mov             inputNumber, eax
 
 
 exit

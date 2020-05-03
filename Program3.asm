@@ -98,17 +98,23 @@ getNumberInput:
     ; Check if it's a positive number
     cmp             inputNumber, upperLimitB
     jg              printResults
-    cmp             inputNumber, lowerLimitA
-    jl              printResults
 
+    cmp             inputNumber, lowerLimitA
+    jl              printInvalidInfo
+    cmp             inputNumber, upperLimitA
+    jg              checkRangeLimit
+
+    
+
+incrementCounter:
     inc             numCounter
     jmp             getNumberInput
 
-    ;jg              printInvalidInfo
-    ;cmp             inputNumber, lowerLimitA
-    ;jg
 
-    ;jmp             goodbye
+checkRangeLimit:
+    cmp             inputNumber, lowerLimitB
+    jl              printInvalidInfo 
+    jmp             incrementCounter
 
 
 printResults:

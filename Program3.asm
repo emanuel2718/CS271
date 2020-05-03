@@ -97,7 +97,7 @@ getNumberInput:
 
     ; Check if it's a positive number
     cmp             inputNumber, upperLimitB
-    js              printResults
+    jg              printResults
 
     cmp             inputNumber, lowerLimitA
     jl              printInvalidInfo
@@ -111,6 +111,8 @@ getNumberInput:
     
 
 incrementCounter:
+    mov             eax, inputNumber
+    add             sum, eax
     inc             numCounter
     jmp             getNumberInput
 
@@ -142,6 +144,11 @@ printResults:
     mov             edx, OFFSET minMessage
     call            WriteString
     mov             eax, minNumber
+    call            WriteInt
+    call            CRLF
+    mov             edx, OFFSET sumMessage
+    call            WriteString
+    mov             eax, sum
     call            WriteInt
     call            CRLF
     jmp             goodbye

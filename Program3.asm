@@ -44,7 +44,7 @@ INCLUDE Irvine32.inc
     exitMessage     BYTE    "We have to stop meeting like this. Farewell, ", 0
 
     ; Important values variables
-    userName        BYTE    50 DUP(0)
+    userName        BYTE    64 DUP(0)
 
     sum             SDWORD  0
     maxNumber       SDWORD  0
@@ -57,6 +57,22 @@ main PROC
     ; Introduction
     mov             edx, OFFSET welcome
     call            WriteString
+    call            CRLF
+
+    ; Get user name
+    mov             edx, OFFSET askName
+    call            WriteString
+    mov             ecx, 63
+    mov             edx, OFFSET userName
+    call            ReadString
+
+
+    ; Say hello to the user.
+    mov             edx, OFFSET greetUser
+    call            WriteString
+    mov             edx, OFFSET userName
+    call            WriteString
+    call            CRLF
     call            CRLF
 
 

@@ -46,10 +46,12 @@ INCLUDE Irvine32.inc
     ; Important values variables
     userName        BYTE    64 DUP(0)
 
+    numCounter      DWORD   0
     sum             SDWORD  0
     maxNumber       SDWORD  0
     minNumber       SDWORD  0
     inputNumber     SDWORD  ?
+
 
 
 .code
@@ -87,9 +89,35 @@ main PROC
 getNumberInput:
     mov             edx, OFFSET promptNumber
     call            WriteString
-    mov             eax, inputNumber
+    mov             eax, numCounter
+    inc             numCounter
+    ;call            WriteDec
+    ;mov             eax, inputNumber
     call            ReadInt
     mov             inputNumber, eax
+
+    ; Check if it's a positive number
+    cmp             inputNumber, upperLimitB
+    jg              printIvalidInfo
+    jmp             goodbye
+
+
+
+printIvalidInfo:
+    mov             edx, OFFSET badInput
+    call            WriteString
+    call            CRLF
+    jmp             getNumberInput
+
+
+
+
+goodbye:
+    mov             edx, OFFSET exitMessage
+    call            WriteString
+    call            CRLF
+
+
 
 
 exit

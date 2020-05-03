@@ -14,6 +14,7 @@ TITLE Program 3     (Program3.asm)
 INCLUDE Irvine32.inc
 
 .const
+    ; Range of valid user input [-88, -55] or [-40, -1] inclusive
     lowerLimitA     EQU     -88
     lowerLimitB     EQU     -40
 
@@ -21,7 +22,7 @@ INCLUDE Irvine32.inc
     upperLimitB     EQU     -1
 
 .data
-    ; Introduction and instructions of the program
+    ; Introduction, user information and instructions of the program variables
     welcome         BYTE    "Welcome to the Integer Accumulator by Emanuel Ramirez", 0
     askName         BYTE    "What is your name? ", 0
     greetUser       BYTE    "Hello there, ", 0
@@ -40,19 +41,22 @@ INCLUDE Irvine32.inc
     avgMessage      BYTE    "The rounded average is ", 0
     maxMessage      BYTE    "The maximum valid number is ", 0
     minMessage      BYTE    "The minimum valid number is ", 0
-    
+
+    noInputMessage  BYTE    "I received no input from human. Sad machine is sad", 0
     exitMessage     BYTE    "We have to stop meeting like this. Farewell, ", 0
 
-    ; Important values variables
+
+    ; User name variable
     userName        BYTE    64 DUP(0)
 
-    numCounter      DWORD   0
-    sum             SDWORD  0
+    numCounter      DWORD   0 ; Keep track of No. valid inputs from the user
+    
+    sum             SDWORD  0 ; Keep track of the sum of all valid inputs
     average         SDWORD  0
 
     maxNumber       SDWORD  -99
     minNumber       SDWORD  0
-    inputNumber     SDWORD  ?
+    inputNumber     SDWORD  ? ; The current user input
 
 
 
@@ -88,23 +92,26 @@ main PROC
     call            WriteString
     call            CRLF
 
+; Get the number from the user and delegate work
 getNumberInput:
+
+    ; Prompt the user for a number
     mov             edx, OFFSET promptNumber
     call            WriteString
-    ;call            WriteDec
-    ;mov             eax, inputNumber
     call            ReadInt
     mov             inputNumber, eax
-    ;;mov             eax, numCounter
 
-    ; Check if it's a positive number
+    ; Check for a positive number
     cmp             inputNumber, upperLimitB
     jg              printResults
 
+    ; Verify input range validity
     cmp             inputNumber, lowerLimitA
     jl              printInvalidInfo
     cmp             inputNumber, upperLimitA
     jg              checkRangeLimit
+
+    ; Change Maximum or Minimum number value if neccesary
     cmp             eax, maxNumber
     jg              changeMaxNumber
     cmp             eax, minNumber
@@ -112,6 +119,7 @@ getNumberInput:
 
     
 
+; Increment the number of valid user inputs
 incrementCounter:
     mov             eax, inputNumber
     add             sum, eax
@@ -119,18 +127,23 @@ incrementCounter:
     jmp             getNumberInput
 
 
+; Verify if user input lies inside the specified range
 checkRangeLimit:
     cmp             inputNumber, lowerLimitB
-    jl              printInvalidInfo 
+    jl              printInvalidInfo
     cmp             eax, maxNumber
     jg              changeMaxNumber
     cmp             eax, minNumber
     jl              changeMinNumber
-    ;;jmp             incrementCounter
     jmp             incrementCounter
 
 
+; Display all the results back to the user
 printResults:
+    cmp             numCounter, 0
+    je              specialMessage
+
+    ; How many number were received from user
     mov             edx, OFFSET validInput1
     call            WriteString
     mov             eax, numCounter
@@ -138,22 +151,29 @@ printResults:
     mov             edx, OFFSET validInput2
     call            WriteString
     call            CRLF
+
+    ; Maximum number information
     mov             edx, OFFSET maxMessage
     call            WriteString
     mov             eax, maxNumber
     call            WriteInt
     call            CRLF
+
+    ; Minimum number information
     mov             edx, OFFSET minMessage
     call            WriteString
     mov             eax, minNumber
     call            WriteInt
     call            CRLF
+
+    ; Sum of number information
     mov             edx, OFFSET sumMessage
     call            WriteString
     mov             eax, sum
     call            WriteInt
     call            CRLF
 
+    ; Rounded average number information
     mov             edx, OFFSET avgMessage
     call            WriteString
     mov             eax, sum
@@ -162,8 +182,10 @@ printResults:
     idiv            ebx
     call            WriteInt
     call            CRLF
+
     jmp             goodbye 
 
+; Update maximum number
 changeMaxNumber:
     mov             eax, inputNumber
     mov             maxNumber, eax
@@ -171,14 +193,11 @@ changeMaxNumber:
     jl              changeMinNumber
     jmp             incrementCounter
 
+; Update minimum number
 changeMinNumber:
     mov             eax, inputNumber
     mov             minNumber, eax
     jmp             incrementCounter
-
-
-checkInsideRange:
-
 
 
 ; Number is negative and outside of range
@@ -188,15 +207,21 @@ printInvalidInfo:
     call            CRLF
     jmp             getNumberInput
 
+; Display special message to the user if no number was received
+specialMessage:
+    call            CRLF
+    mov             edx, OFFSET noInputMessage
+    call            WriteString
+    call            CRLF
+    jmp             goodbye
 
-
-
+; Display goodbye message to the user
 goodbye:
     mov             edx, OFFSET exitMessage
     call            WriteString
+    mov             edx, OFFSET userName
+    call            WriteString
     call            CRLF
-
-
 
 
 exit

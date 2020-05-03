@@ -48,6 +48,8 @@ INCLUDE Irvine32.inc
 
     numCounter      DWORD   0
     sum             SDWORD  0
+    average         SDWORD  0
+
     maxNumber       SDWORD  -99
     minNumber       SDWORD  0
     inputNumber     SDWORD  ?
@@ -151,7 +153,16 @@ printResults:
     mov             eax, sum
     call            WriteInt
     call            CRLF
-    jmp             goodbye
+
+    mov             edx, OFFSET avgMessage
+    call            WriteString
+    mov             eax, sum
+    cdq
+    mov             ebx, numCounter
+    idiv            ebx
+    call            WriteInt
+    call            CRLF
+    jmp             goodbye 
 
 changeMaxNumber:
     mov             eax, inputNumber

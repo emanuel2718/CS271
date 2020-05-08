@@ -15,6 +15,8 @@ TITLE Program 4     (Program4.asm)
 INCLUDE Irvine32.inc
 
 .const
+    lowerLimit      EQU     1
+    upperLimit      EQU     400
 
 .data
     ; Introduction, user information and instructions of the program variables
@@ -33,9 +35,9 @@ INCLUDE Irvine32.inc
 .code
 main PROC
 
-    mov     edx, OFFSET programInfo
-    call    WriteString
-    call    CRLF
+    mov             edx, OFFSET programInfo
+    call            WriteString
+    call            CRLF
 
 
 exit

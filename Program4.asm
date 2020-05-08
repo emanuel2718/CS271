@@ -15,8 +15,8 @@ TITLE Program 4     (Program4.asm)
 INCLUDE Irvine32.inc
 
 .const
-    lowerLimit      EQU     1
-    upperLimit      EQU     400
+    LOWER_RANGE     EQU     1
+    UPPER_RANGE     EQU     400
 
 .data
     ; Introduction, user information and instructions of the program variables
@@ -25,7 +25,7 @@ INCLUDE Irvine32.inc
                     BYTE    "like to see.", 0
     programInfo2    BYTE    "I'll accept orders for up to 400 composites", 0
 
-    promptNumber    BYTE    "Enter the number of composites [1 .. 400]", 0
+    promptNumber    BYTE    "Enter the number of composites [1 .. 400]: ", 0
     
     outOfRange      BYTE    "Out of range. Try again", 0
 
@@ -36,6 +36,8 @@ INCLUDE Irvine32.inc
 main PROC
 
     call            ProgramIntroduction
+    call            getUserInput
+    call            ExitMessage
 
 
 
@@ -57,5 +59,42 @@ ProgramIntroduction PROC
 ProgramIntroduction ENDP
 
 
+GetUserInput PROC
+    mov             edx, OFFSET promptNumber
+    call            WriteString
+    jmp             getInput
+
+getInput:
+    call            ReadInt
+    call            ValidateUserInput
+    ret
+
+
+
+GetUserInput ENDP
+
+
+ValidateUserInput PROC
+    cmp             eax, LOWER_RANGE
+    jl              invalidInput
+    cmp             eax, UPPER_RANGE
+    jg              invalidInput
+    ret
+
+invalidInput:
+    mov             edx, OFFSET outOfRange
+    call            WriteString
+    call            CRLF
+    call            GetUserInput
+    ret
+    
+ValidateUserInput ENDP
+
+ExitMessage PROC
+    mov             edx, OFFSET goodbye
+    call            WriteString
+    call            CRLF
+    ret
+ExitMessage ENDP
 
 END main

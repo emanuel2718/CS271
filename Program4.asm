@@ -19,16 +19,24 @@ INCLUDE Irvine32.inc
     UPPER_RANGE     EQU     400
 
 .data
-    ; Introduction, user information and instructions of the program variables
+    ; Introduction and program instructions
     welcome         BYTE    "Composite Numbers   Programmed by Emanuel Ramirez", 0
     programInfo     BYTE    "Enter the number of composites numbers you would "
                     BYTE    "like to see.", 0
     programInfo2    BYTE    "I'll accept orders for up to 400 composites", 0
 
+    ; Prompt the user for a number inside the range
     promptNumber    BYTE    "Enter the number of composites [1 .. 400]: ", 0
-    
+
+    ; Error. Number is out of range
     outOfRange      BYTE    "Out of range. Try again", 0
 
+    ; Variables
+    userNumber      DWORD   ?
+    numbersTotal    DWORD   0
+    currentNumber   DWORD   3
+
+    ; Exit message
     goodbye         BYTE    "Results certified by Emanuel Ramirez. Farewell", 0
 
 
@@ -37,6 +45,7 @@ main PROC
 
     call            introduction
     call            getUserData
+    call            showComposites
     call            farewell
 
 
@@ -67,6 +76,7 @@ getUserData PROC
 getInput:
     call            ReadInt
     call            ValidateUserInput
+    mov             userNumber, eax
     ret
 
     validateUserInput PROC
@@ -88,6 +98,61 @@ getInput:
 
 
 getUserData ENDP
+
+
+showComposites PROC
+    mov             ecx, eax
+
+checkNext:
+    call            nextComposite
+    call            printNumber
+    loop            checkNext
+    ret
+
+    nextComposite PROC
+
+    analyzeNext:
+        inc             currentNumber
+        mov             eax, currentNumber
+        call            isComposite
+        jnz             analyzeNext
+        ret
+    nextComposite ENDP
+
+    isComposite PROC
+        mov             ebx, 2
+
+    next:
+        mov             esi, eax
+        cmp             eax, ebx
+        je              notComposite
+
+        xor             edx, edx
+        div             ebx
+        cmp             edx, 0
+        je              finish
+
+        inc             ebx
+        mov             eax, esi
+        jmp             next
+
+    notComposite:
+        cmp             edx, 0
+
+    finish:
+        ret
+    isComposite ENDP
+    
+    ret
+showComposites ENDP
+
+
+printNumber PROC
+    mov             eax, currentNumber
+    call            WriteDec
+    call CRLF
+    ret
+printNumber ENDP
 
 
 

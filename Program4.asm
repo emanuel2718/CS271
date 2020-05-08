@@ -35,16 +35,16 @@ INCLUDE Irvine32.inc
 .code
 main PROC
 
-    call            ProgramIntroduction
-    call            getUserInput
-    call            ExitMessage
+    call            introduction
+    call            getUserData
+    call            farewell
 
 
 
     exit
 main ENDP
 
-ProgramIntroduction PROC
+introduction PROC
     mov             edx, OFFSET welcome
     call            WriteString
     call            CRLF
@@ -56,10 +56,10 @@ ProgramIntroduction PROC
     call            CRLF
     ret
 
-ProgramIntroduction ENDP
+introduction ENDP
 
 
-GetUserInput PROC
+getUserData PROC
     mov             edx, OFFSET promptNumber
     call            WriteString
     jmp             getInput
@@ -69,32 +69,33 @@ getInput:
     call            ValidateUserInput
     ret
 
+    validateUserInput PROC
+        cmp             eax, LOWER_RANGE
+        jl              invalidInput
+        cmp             eax, UPPER_RANGE
+        jg              invalidInput
+        ret
 
-
-GetUserInput ENDP
-
-
-ValidateUserInput PROC
-    cmp             eax, LOWER_RANGE
-    jl              invalidInput
-    cmp             eax, UPPER_RANGE
-    jg              invalidInput
-    ret
-
-invalidInput:
-    mov             edx, OFFSET outOfRange
-    call            WriteString
-    call            CRLF
-    call            GetUserInput
-    ret
+    invalidInput:
+        mov             edx, OFFSET outOfRange
+        call            WriteString
+        call            CRLF
+        call            getUserData
+        ret
     
-ValidateUserInput ENDP
+    validateUserInput ENDP
 
-ExitMessage PROC
+
+
+getUserData ENDP
+
+
+
+farewell PROC
     mov             edx, OFFSET goodbye
     call            WriteString
     call            CRLF
     ret
-ExitMessage ENDP
+farewell ENDP
 
 END main

@@ -35,12 +35,27 @@ INCLUDE Irvine32.inc
 .code
 main PROC
 
+    call            ProgramIntroduction
+
+
+
+    exit
+main ENDP
+
+ProgramIntroduction PROC
+    mov             edx, OFFSET welcome
+    call            WriteString
+    call            CRLF
     mov             edx, OFFSET programInfo
     call            WriteString
     call            CRLF
+    mov             edx, OFFSET programInfo2
+    call            WriteString
+    call            CRLF
+    ret
+
+ProgramIntroduction ENDP
 
 
-exit
-main ENDP
 
 END main

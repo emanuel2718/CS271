@@ -35,6 +35,9 @@ INCLUDE Irvine32.inc
     userNumber      DWORD   ?
     numbersTotal    DWORD   0
     currentNumber   DWORD   3
+    space           BYTE    "    ", 0
+    amountOfNumber  DWORD   0
+    numbersPerLine  DWORD   10
 
     ; Exit message
     goodbye         BYTE    "Results certified by Emanuel Ramirez. Farewell", 0
@@ -148,15 +151,29 @@ showComposites ENDP
 
 
 printNumber PROC
+    pushad
     mov             eax, currentNumber
+    mov             ebx, amountOfNumber
+    cmp             numbersPerLine, ebx
+    jg              writeNumber
+    mov             amountOfNumber, 0
+    call            CRLF
+
+writeNumber:
     call            WriteDec
-    call CRLF
+    mov             edx, OFFSET space
+    call            WriteString
+    inc             amountOfNumber
+    popad
     ret
+
 printNumber ENDP
 
 
 
 farewell PROC
+    call            CRLF
+    call            CRLF
     mov             edx, OFFSET goodbye
     call            WriteString
     call            CRLF

@@ -12,9 +12,11 @@ TITLE Program 4     (Program4.asm)
 ;                         display all the composite numbers up to the given
 ;                         number.
 
+
 INCLUDE Irvine32.inc
 
 .const
+    ; Range [1 .. 400]
     LOWER_RANGE     EQU     1
     UPPER_RANGE     EQU     400
 
@@ -44,18 +46,23 @@ INCLUDE Irvine32.inc
 
 
 .code
+
+; --------------------
+; Main procedure
+; --------------------
 main PROC
 
     call            introduction
     call            getUserData
     call            showComposites
     call            farewell
-
-
-
     exit
 main ENDP
 
+
+; --------------------
+; Introduction procedure
+; --------------------
 introduction PROC
     mov             edx, OFFSET welcome
     call            WriteString
@@ -67,9 +74,11 @@ introduction PROC
     call            WriteString
     call            CRLF
     ret
-
 introduction ENDP
 
+; --------------------
+; Get the data from the user
+; --------------------
 
 getUserData PROC
     mov             edx, OFFSET promptNumber
@@ -82,6 +91,9 @@ getInput:
     mov             userNumber, eax
     ret
 
+    ; --------------------
+    ; Validate user data
+    ; --------------------
     validateUserInput PROC
         cmp             eax, LOWER_RANGE
         jl              invalidInput
@@ -103,6 +115,9 @@ getInput:
 getUserData ENDP
 
 
+; --------------------
+; Show Composite numbers 
+; --------------------
 showComposites PROC
     mov             ecx, eax
 
@@ -122,6 +137,9 @@ checkNext:
         ret
     nextComposite ENDP
 
+    ; --------------------
+    ; Check composite number
+    ; --------------------
     isComposite PROC
         mov             ebx, 2
 
@@ -150,6 +168,9 @@ checkNext:
 showComposites ENDP
 
 
+; --------------------
+; Print number to console
+; --------------------
 printNumber PROC
     pushad
     mov             eax, currentNumber

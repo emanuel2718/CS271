@@ -51,7 +51,6 @@ INCLUDE Irvine32.inc
 ; Main procedure
 ; --------------------
 main PROC
-
     call            introduction
     call            getUserData
     call            showComposites
@@ -67,11 +66,13 @@ introduction PROC
     mov             edx, OFFSET welcome
     call            WriteString
     call            CRLF
+    call            CRLF
     mov             edx, OFFSET programInfo
     call            WriteString
     call            CRLF
     mov             edx, OFFSET programInfo2
     call            WriteString
+    call            CRLF
     call            CRLF
     ret
 introduction ENDP
@@ -85,6 +86,7 @@ getUserData PROC
     call            WriteString
     jmp             getInput
 
+; Get the number from the user
 getInput:
     call            ReadInt
     call            ValidateUserInput
@@ -99,8 +101,10 @@ getInput:
         jl              invalidInput
         cmp             eax, UPPER_RANGE
         jg              invalidInput
+        call            CRLF
         ret
 
+    ; Number is out of range
     invalidInput:
         mov             edx, OFFSET outOfRange
         call            WriteString
@@ -121,14 +125,18 @@ getUserData ENDP
 showComposites PROC
     mov             ecx, eax
 
+; Loop until n number has been checked
 checkNext:
     call            nextComposite
     call            printNumber
     loop            checkNext
     ret
 
+    ; --------------------
+    ; Analize next number
+    ; --------------------
     nextComposite PROC
-
+    ; Go through numbers in range
     analyzeNext:
         inc             currentNumber
         mov             eax, currentNumber
@@ -143,27 +151,27 @@ checkNext:
     isComposite PROC
         mov             ebx, 2
 
+    ; Check if number is composite or not
     next:
         mov             esi, eax
         cmp             eax, ebx
         je              notComposite
-
         xor             edx, edx
         div             ebx
         cmp             edx, 0
-        je              finish
-
+        je              finish ; Number is composite
         inc             ebx
         mov             eax, esi
         jmp             next
 
+    ; Number is not composite
     notComposite:
         cmp             edx, 0
 
     finish:
         ret
     isComposite ENDP
-    
+
     ret
 showComposites ENDP
 
@@ -177,9 +185,12 @@ printNumber PROC
     mov             ebx, amountOfNumber
     cmp             numbersPerLine, ebx
     jg              writeNumber
+
+    ; Move to the new line
     mov             amountOfNumber, 0
     call            CRLF
 
+; Still in the same line
 writeNumber:
     call            WriteDec
     mov             edx, OFFSET space
@@ -192,6 +203,9 @@ printNumber ENDP
 
 
 
+; --------------------
+; Exit procedure
+; --------------------
 farewell PROC
     call            CRLF
     call            CRLF

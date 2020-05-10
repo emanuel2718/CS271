@@ -2,7 +2,7 @@ TITLE Program 4     (Program4.asm)
 
 ; Author                : Emanuel Ramirez Alsina
 ; Date Created          : 05/04/2020
-; Last Modified:        : 05/08/2020
+; Last Modified:        : 05/10/2020
 ; OSU email address:    : ramieman@oregonstate.edu
 ; Course number/section : 271/400
 ; Project Number        : 04

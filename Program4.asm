@@ -62,6 +62,7 @@ main ENDP
 ; --------------------------------------------
 ; Introduction procedure
 ; Prints program information and instructions.
+; register changed: EDX
 ; --------------------------------------------
 introduction PROC
     mov             edx, OFFSET welcome
@@ -83,7 +84,7 @@ introduction ENDP
 ; to calculate composite numbers.
 ; If number was out of the given range; prompt again
 ;
-; Return: EAX = valid number
+; return: EAX = valid number
 ; ----------------------------------------------------
 
 getUserData PROC
@@ -98,9 +99,11 @@ getInput:
     mov             userNumber, eax
     ret
 
-    ; --------------------
-    ; Validate user input
-    ; --------------------
+    ; --------------------------------
+    ; Procedure to validate user input
+    ; return: if number is a valid input or not
+    ; registers changed: EAX, EDX
+    ; --------------------------------
     validateUserInput PROC
         cmp             eax, LOWER_RANGE
         jl              invalidInput
@@ -119,8 +122,6 @@ getInput:
     
     validateUserInput ENDP
 
-
-
 getUserData ENDP
 
 
@@ -128,6 +129,7 @@ getUserData ENDP
 ; Uses ECX as a counter with the number entered by the user.
 ; Will loop until ECX = 0. Meaning all the composite number has been
 ; printed on the screen.
+; register changed: ECX
 ; --------------------------------------------------------------
 showComposites PROC
     mov             ecx, eax
@@ -139,11 +141,12 @@ checkNext:
     loop            checkNext
     ret
 
-    ; ------------------------------------------------------
-    ; Assign current number to eax for it to be checked
+    ; ---------------------------------------------------------------
+    ; Procedure that assign current number to eax for it to be checked
     ; In charge of iterating through the numbers and updating
     ; currentNumber
-    ; ------------------------------------------------------
+    ; register changed: EAX
+    ; ---------------------------------------------------------------
     nextComposite PROC
     ; Go through numbers in range
     analyzeNext:
@@ -154,11 +157,13 @@ checkNext:
         ret
     nextComposite ENDP
 
-    ; --------------------------------------------------------------
-    ; Check if number inside EAX (currentNumber) is composite or not.
-    ; Return: ZF = 0 number is not Composite
-    ; Return: ZF = 1 number is Cmposite
-    ; --------------------------------------------------------------
+    ;-------------------------------------------------------------------------
+    ; Procedure to check if number inside EAX (currentNumber) is composite or not.
+    ; receives: current number
+    ; return: ZF = 0 number is not Composite
+    ; return: ZF = 1 number is Cmposite
+    ; registers changed: EAX, EBX, ECX, EDX
+    ;-------------------------------------------------------------------------
     isComposite PROC
         mov             ebx, 2
 
@@ -188,7 +193,8 @@ showComposites ENDP
 
 
 ; ----------------------------------------------------------------------
-; Print number to console adding spaces and printing 10 numbers per line
+; Procedure to print number to console adding spaces and printing 10 numbers per line
+; registers changed: EAX, EBX
 ; ----------------------------------------------------------------------
 printNumber PROC
     pushad

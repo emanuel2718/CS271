@@ -10,7 +10,7 @@ TITLE Program 4     (Program4.asm)
 ; Description           : Program to calculate composite numbers. The number
 ;                         must be in the range [1 .. 400]. The program will
 ;                         display all the composite numbers up to the given
-;                         number.
+;                         number
 
 
 INCLUDE Irvine32.inc

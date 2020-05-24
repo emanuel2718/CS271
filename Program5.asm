@@ -76,10 +76,21 @@ main PROC
     push            OFFSET array
     call            displayList
 
+    ;Sort list in ascending order
+    push            OFFSET array
+    push            OFFSET ARRAYSIZE
+    call            sortList
+
     ;Find median of list
     push            OFFSET array
     push            OFFSET ARRAYSIZE
     call            displayMedian
+
+    ;Display sorted array to the console
+    push            OFFSET sortedTitle
+    push            OFFSET ARRAYSIZE
+    push            OFFSET array
+    call            displayList
 
 
 
@@ -192,6 +203,89 @@ displayList PROC
 
 displayList ENDP
 
+sortList PROC
+
+    ;Set stack frame
+    push            ebp
+    mov             ebp, esp
+
+    mov             ecx, [ebp + 8] ;ARRAYSIZE
+    mov             esi, [ebp + 12] ;List
+    dec             ecx
+
+    ;Start nested loops
+    outerLoop:
+        
+        mov             eax, [esi]
+        mov             edx, esi
+        push            ecx
+
+        innerLoop:
+            
+            mov             ebx, [esi + 4]
+            mov             eax, [edx]
+            cmp             eax, ebx
+
+            ;If eax <= ebx. Jump to swap the numbers
+            jle              dontExchange
+
+            ;Else, no need to swap.
+            add             esi, 4
+            push            esi
+            push            edx
+            push            ecx
+            call            exchange
+            sub             esi, 4
+
+            dontExchange:
+                add             esi, 4
+                loop            innerLoop
+        pop             ecx
+        mov             esi, edx
+        add             esi, 4
+        loop            outerLoop
+
+    pop             ebp
+    ret             8
+
+sortList ENDP
+
+
+exchange PROC
+    
+    ;Set stack fram
+    push            ebp
+    mov             ebp, esp
+    pushad
+
+    mov             eax, [ebp + 16] ;array[j]
+    mov             ebx, [ebp + 12] ;array[i]
+    mov             edx, eax
+    sub             edx, ebx
+
+    ;Swap numbers and insert them into the array
+    mov             esi, ebx
+    mov             ecx, [ebx]
+    mov             eax, [eax]
+    mov             [esi], eax
+    add             esi, edx
+    mov             [esi], ecx
+
+    popad
+    pop             ebp
+    ret             12
+exchange ENDP
+
+
+
+;------------------------------------------------------------
+; Procedure: displayMedian
+; Description: Prints the median value of the array
+; Receives: size and address of the array
+; Returns: median value of the array
+; Requires: array must contains sorted integers
+; Registers changed: ebp, esp, eax, ebx, ecx, edx
+;------------------------------------------------------------
 displayMedian PROC
 
 
@@ -199,24 +293,31 @@ displayMedian PROC
     push            ebp
     mov             ebp, esp
 
-
-
     mov             eax, [ebp + 8] ;ARRAYSIZE
-    mov             esi, [ebp + 12] ;Array
-
-    mov             ebx, 4
-    mul             ebx
-    add             esi, eax
-    mov             eax, [esi]
-    add             eax, [esi - 4]
-    mov             edx, 0
-    mov             ebx, 2
-    div             ebx
+    mov             edi, [ebp + 12] ;Array
 
     mov             edx, OFFSET medianTitle
     call            WriteString
+
+    ;Divide the array size by 2 to find the middle
+    mov             ecx, 2
+    cdq
+    div             ecx
+
+    mov             ecx, 4  ;Size of array TYPE
+    mul             ecx
+    add             edi, eax ;Add the product to edi
+    mov             eax, [edi]
+    sub             edi, ecx
+    add             eax, [edi]
+    mov             ecx, 2
+
+    cdq
+    div             ecx
+
     call            WriteDec
     call            CRLF
+
 
     pop             ebp
     ret             8

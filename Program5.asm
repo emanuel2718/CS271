@@ -159,7 +159,16 @@ introduction PROC
 introduction ENDP
 
 
+;------------------------------------------------------------
+; Procedure: fillArray
+; Description: fills array with random integers
+; Receives: array, LO, HI, array size
+; Returns: array filled with random integers
+; Requires: array size and initialized array
+; Registers changed: eax, ebp, ecx, esi, esp
+;------------------------------------------------------------
 fillArray PROC
+
     ;Set stack frame
     push            ebp
     mov             ebp, esp
@@ -167,23 +176,24 @@ fillArray PROC
     mov             ecx, [ebp + 8]  ;Array size
     mov             esi, [ebp + 20] ;Acutal array
 
+    ;Loop to the next number
     nextNum:
 
         ;Generate the random numbers
-        mov             eax, [ebp + 12]
-        sub             eax, [ebp + 16]
+        mov             eax, [ebp + 12] ; HI -> eax
+        sub             eax, [ebp + 16] ; eax - LO
         inc             eax
         call            RandomRange
-        add             eax, [ebp + 16]
+        add             eax, [ebp + 16] ; eax + LO
 
         ;Add the random number to the array
         mov             [esi], eax
         add             esi, 4
         loop            nextNum
 
-
     pop             ebp
     ret             12
+
 fillArray ENDP
 
 displayList PROC

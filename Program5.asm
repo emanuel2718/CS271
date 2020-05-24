@@ -31,6 +31,7 @@ INCLUDE Irvine32.inc
                     BYTE    " then displays the number of instances of each"
                     BYTE    " generated value.", 0
 
+    ;Array of numbers
     array           DWORD   ARRAYSIZE DUP(0)
     tempArray       DWORD   ARRAYSIZE DUP(0)
 
@@ -40,6 +41,7 @@ INCLUDE Irvine32.inc
     ;Output formatting
     spaces          BYTE    "    ", 0
 
+    ;Section titles outputs
     unsortedTitle   BYTE    "Your unsorted random numbers:",0
     sortedTitle     BYTE    "Your sorted random numbers:",0
     medianTitle     BYTE    "List Median: ", 0
@@ -48,12 +50,10 @@ INCLUDE Irvine32.inc
     ;Keeps track of the current number to count the instances
     counter         DWORD   0
 
+    ;Temp variable for the eax register
     temp            DWORD   0
 
-    ;Debuging
-    openBrakcet     BYTE    "[", 0
-    closeBrakcet    BYTE    "] ", 0
-
+    ;Farewell message
     exitMessage     BYTE    "Goodbye, and thanks for using my program!", 0
 
 
@@ -104,6 +104,7 @@ main PROC
     push            OFFSET array
     call            displayList
 
+    ;Count the instances of each number in the sorted array
     push            OFFSET instanceTitle
     push            OFFSET LO
     push            OFFSET array
@@ -112,8 +113,6 @@ main PROC
 
     ; Display exit message
     call            farewell
-
-
 
     exit
 main ENDP

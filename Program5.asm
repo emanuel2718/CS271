@@ -57,8 +57,6 @@ INCLUDE Irvine32.inc
     exitMessage     BYTE    "Goodbye, and thanks for using my program!", 0
 
 
-
-
 .code
 
 ;------------------------------------------------------------
@@ -100,6 +98,7 @@ main PROC
     call            sortList
 
     ;Find median of list
+    push            OFFSET medianTitle
     push            OFFSET array
     push            OFFSET ARRAYSIZE
     call            displayMedian
@@ -111,6 +110,7 @@ main PROC
     call            displayList
 
     ;Count the instances of each number in the sorted array
+    push            OFFSET counter
     push            OFFSET instanceTitle
     push            OFFSET LO
     push            OFFSET array
@@ -118,6 +118,7 @@ main PROC
     call            countList
 
     ; Display exit message
+    push            OFFSET exitMessage
     call            farewell
 
     exit
@@ -194,7 +195,6 @@ fillArray PROC
 
     pop             ebp
     ret             12
-
 fillArray ENDP
 
 
@@ -251,7 +251,6 @@ displayList PROC
 
     pop             ebp
     ret             16
-
 displayList ENDP
 
 
@@ -351,7 +350,7 @@ exchange ENDP
 ;------------------------------------------------------------
 ; Procedure: displayMedian
 ; Description: Prints the median value of the array
-; Receives: array, size of array
+; Receives: median title, array, size of array
 ; Returns: median value of the array
 ; Requires: array must contains sorted integers
 ; Registers changed: ebp, esp, eax, ebx, ecx, edx
@@ -366,7 +365,7 @@ displayMedian PROC
     mov             eax, [ebp + 8] ;ARRAYSIZE
     mov             edi, [ebp + 12] ;Array
 
-    mov             edx, OFFSET medianTitle
+    mov             edx, [ebp + 16]
     call            WriteString
 
     ;Divide the array size by 2 to find the middle
@@ -385,14 +384,24 @@ displayMedian PROC
     cdq
     div             ecx
 
+    ;Print the median to the console
     call            WriteDec
     call            CRLF
 
 
     pop             ebp
-    ret             8
+    ret             12
 displayMedian ENDP
 
+
+;------------------------------------------------------------
+; Procedure: countList
+; Description: counts the instances of each number in the array
+; Receives: counter, instanceTitle, LO, array, size of array
+; Returns: instances of each number in the array
+; Requires: array must contains sorted integers
+; Registers changed: eax, ebx, ecx, edx, ebp, esp, esi
+;------------------------------------------------------------
 countList PROC
 
     ;Set stack frame
@@ -453,11 +462,23 @@ countList PROC
     call            CRLF
     call            CRLF
     pop             ebp
-    ret             16
+    ret             20
 countList ENDP
 
+;------------------------------------------------------------
+; Procedure: farewell
+; Description: display exit message to the screen
+; Receives: exitMessage
+; Returns: exits the program
+; Requires: none
+; Registers changed: edx, ebp
+;------------------------------------------------------------
 farewell PROC
-    mov             edx, OFFSET exitMessage
+    ;Set stack frame
+    push            ebp
+    mov             ebp, esp
+
+    mov             edx, [ebp + 8]
     call            WriteString
     call            CRLF
     exit

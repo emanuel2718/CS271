@@ -20,8 +20,7 @@ INCLUDE Irvine32.inc
     ARRAYSIZE       EQU     200
 
 .data
-    ; Introduction and program instructions
-
+    ;Introduction and program instructions
     programTitle    BYTE    "Program: Sorting and Counting Random Integers", 0
     programmerName  BYTE    "Author: Emanuel Ramirez", 0
     programInfo     BYTE    "Description: A program that generates 200 random"
@@ -34,7 +33,10 @@ INCLUDE Irvine32.inc
     array           DWORD   ARRAYSIZE DUP(0)
     tempArray       DWORD   ARRAYSIZE DUP(0)
 
+    ;Keep track of the current amount of number on current line
     numbersInLine   DWORD   0
+
+    ;Output formatting
     spaces          BYTE    "    ", 0
 
     unsortedTitle   BYTE    "Your unsorted random numbers:",0
@@ -118,12 +120,14 @@ fillArray PROC
 
     nextNum:
 
+        ;Generate the random numbers
         mov             eax, [ebp + 12]
         sub             eax, [ebp + 16]
         inc             eax
         call            RandomRange
         add             eax, [ebp + 16]
 
+        ;Add the random number to the array
         mov             [esi], eax
         add             esi, 4
         loop            nextNum
@@ -134,28 +138,32 @@ fillArray PROC
 fillArray ENDP
 
 displayList PROC
-    ;Set stack fram
+
+    ;Set stack frame
     push            ebp
     mov             ebp, esp
 
+    ; Display section title
     mov             edx, [ebp + 16] ;Title
     call            CRLF
     call            WriteString
     call            CRLF
 
-    mov             ecx, [ebp + 12] ;Size
+    mov             ecx, [ebp + 12] ;ArraySize
     mov             esi, [ebp + 8] ;List
 
     mov             numbersInLine, 0
 
     beginLoop:
 
+        ;Display the number and account for spaces
         mov             eax, [esi]
         call            WriteDec
         mov             edx, OFFSET spaces
         call            WriteString
         inc             numbersInLine
 
+        ;Check if new line is needed. If 10 number in the line already
         mov             edx, 0
         mov             eax, numbersInLine
         mov             ebx, 10

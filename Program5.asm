@@ -88,6 +88,7 @@ main PROC
     call            fillArray
 
     ;Display unsorted array to the console
+    push            OFFSET numbersInLine
     push            OFFSET unsortedTitle
     push            OFFSET ARRAYSIZE
     push            OFFSET array
@@ -196,6 +197,15 @@ fillArray PROC
 
 fillArray ENDP
 
+
+;------------------------------------------------------------
+; Procedure: displayList
+; Description: display the list integers to the console
+; Receives: numbersInLine, unsortedTitle, ARRAYSIZE, array
+; Returns: prints the list to the console
+; Requires: array must be filled with integers
+; Registers changed: eax, ebp, edx, esi, esp
+;------------------------------------------------------------
 displayList PROC
 
     ;Set stack frame
@@ -210,8 +220,9 @@ displayList PROC
 
     mov             ecx, [ebp + 12] ;ArraySize
     mov             esi, [ebp + 8] ;List
+    mov             edx, [ebp + 20] ;numbersInLine
 
-    mov             numbersInLine, 0
+    mov             edx, 0
 
     beginLoop:
 
@@ -220,17 +231,15 @@ displayList PROC
         call            WriteDec
         mov             edx, OFFSET spaces
         call            WriteString
-        inc             numbersInLine
+        inc             edx
 
         ;Check if new line is needed. If 10 number in the line already
         mov             edx, 0
-        mov             eax, numbersInLine
+        mov             eax, edx
         mov             ebx, 10
         div             ebx
         cmp             ebx, 0
-
         jne             endLoop
-        
         call            CRLF
 
     endLoop:
@@ -241,10 +250,10 @@ displayList PROC
     call            CRLF
 
     pop             ebp
-    ret             12
-
+    ret             16
 
 displayList ENDP
+
 
 sortList PROC
 

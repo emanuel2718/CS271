@@ -13,10 +13,11 @@ TITLE Program 5     (Program4.asm)
 INCLUDE Irvine32.inc
 
 .const
-    ; Range [10 .. 20]
+    ;Range [10 .. 20]
     LO              EQU     10
     HI              EQU     29
 
+    ;Size of the array
     ARRAYSIZE       EQU     200
 
 .data
@@ -42,7 +43,16 @@ INCLUDE Irvine32.inc
     unsortedTitle   BYTE    "Your unsorted random numbers:",0
     sortedTitle     BYTE    "Your sorted random numbers:",0
     medianTitle     BYTE    "List Median: ", 0
-    instanceTitle   BYTE    "Tour list of instances of each generated number", 0
+    instanceTitle   BYTE    "Your list of instances of each generated number:", 0
+
+    ;Keeps track of the current number to count the instances
+    counter         DWORD   0
+
+    temp            DWORD   0
+
+    ;Debuging
+    openBrakcet     BYTE    "[", 0
+    closeBrakcet    BYTE    "] ", 0
 
     exitMessage     BYTE    "Goodbye, and thanks for using my program!", 0
 
@@ -93,6 +103,12 @@ main PROC
     push            OFFSET ARRAYSIZE
     push            OFFSET array
     call            displayList
+
+    push            OFFSET instanceTitle
+    push            OFFSET LO
+    push            OFFSET array
+    push            OFFSET ARRAYSIZE
+    call            countList
 
     ; Display exit message
     call            farewell
@@ -328,6 +344,55 @@ displayMedian PROC
     ret             8
 
 displayMedian ENDP
+
+countList PROC
+
+    ;Set stack frame
+    push            ebp
+    mov             ebp, esp
+
+    mov             ecx, [ebp + 8] ;ARRAYSIZE
+    mov             esi, [ebp + 12] ;Array
+    mov             ebx, [ebp + 16] ;LO
+
+    ; Print Instance title
+    mov             edx, [ebp + 20] ;Instance Title
+    call            WriteString
+    call            CRLF
+
+
+    nextNumber:
+        mov             eax, [esi]
+        
+        cmp             ebx, eax
+        je              increaseCounter
+
+        mov             ebx, eax
+        add             esi, 4
+        mov             temp, eax
+        mov             eax, counter
+        mov             edx, OFFSET counter
+        call            WriteDec
+        mov             eax, temp
+
+
+
+        mov             edx, OFFSET spaces
+        call            WriteString
+        mov             counter, 0
+        loop            nextNumber
+
+        increaseCounter:
+            mov             ebx, eax
+            inc             counter
+            add             esi, 4
+            loop            nextNumber
+
+    call            CRLF
+    call            CRLF
+    pop             ebp
+    ret             16
+countList ENDP
 
 farewell PROC
     mov             edx, OFFSET exitMessage

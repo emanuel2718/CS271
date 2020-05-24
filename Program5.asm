@@ -255,6 +255,14 @@ displayList PROC
 displayList ENDP
 
 
+;------------------------------------------------------------
+; Procedure: sortList
+; Description: sorts the given list of numbers
+; Receives: array, size of array
+; Returns: sorted list of numbers
+; Requires: array must be filled with integers
+; Registers changed: eax, ebp, ecx, edx, esi, esp
+;------------------------------------------------------------
 sortList PROC
 
     ;Set stack frame
@@ -299,15 +307,24 @@ sortList PROC
 
     pop             ebp
     ret             8
-
 sortList ENDP
 
 
+;------------------------------------------------------------
+; Procedure: exchange
+; Description: swaps the receved parameters location in the array
+; Receives: array[i], array[j]
+; Returns: swap the numbers
+; Requires: two numbers to be swapped
+; Registers changed: eax, ebp, ecx, edx, esi, esp
+;------------------------------------------------------------
 exchange PROC
     
-    ;Set stack fram
+    ;Set stack frame
     push            ebp
     mov             ebp, esp
+
+    ;Save variables and registers
     pushad
 
     mov             eax, [ebp + 16] ;array[j]
@@ -323,6 +340,7 @@ exchange PROC
     add             esi, edx
     mov             [esi], ecx
 
+    ;Restore
     popad
     pop             ebp
     ret             12
@@ -333,7 +351,7 @@ exchange ENDP
 ;------------------------------------------------------------
 ; Procedure: displayMedian
 ; Description: Prints the median value of the array
-; Receives: size and address of the array
+; Receives: array, size of array
 ; Returns: median value of the array
 ; Requires: array must contains sorted integers
 ; Registers changed: ebp, esp, eax, ebx, ecx, edx
@@ -373,7 +391,6 @@ displayMedian PROC
 
     pop             ebp
     ret             8
-
 displayMedian ENDP
 
 countList PROC

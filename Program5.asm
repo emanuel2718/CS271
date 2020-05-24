@@ -39,7 +39,13 @@ INCLUDE Irvine32.inc
 ; --------------------
 main PROC
 
+    ; Initialize random number generator
     call            Randomize
+
+    ; Program instroduction
+    push            OFFSET programTitle
+    push            OFFSET programmerName
+    push            OFFSET programInfo
     call            introduction
 
     exit
@@ -47,16 +53,28 @@ main ENDP
 
 
 introduction PROC
-    mov             edx, OFFSET programTitle
+    ; Set stack frame
+    push            ebp
+    mov             ebp, esp
+
+    ; Print program title
+    mov             edx, [ebp + 16]
     call            WriteString
     call            CRLF
-    mov             edx, OFFSET programmerName
+
+    ; Print program author name
+    mov             edx, [ebp + 12]
     call            WriteString
     call            CRLF
-    mov             edx, OFFSET programInfo
+
+    ; Print program's description
+    mov             edx, [ebp + 8]
     call            WriteString
     call            CRLF
-    ret
+
+
+    pop             ebp
+    ret             8
 introduction ENDP
 
 

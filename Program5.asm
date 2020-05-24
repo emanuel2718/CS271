@@ -34,6 +34,9 @@ INCLUDE Irvine32.inc
     array           DWORD   ARRAYSIZE DUP(0)
     tempArray       DWORD   ARRAYSIZE DUP(0)
 
+    numbersInLine   DWORD   0
+    spaces          BYTE    "    ", 0
+
     unsortedTitle   BYTE    "Your unsorted random numbers:",0
     sortedTitle     BYTE    "Your sorted random numbers:",0
     medianTitle     BYTE    "List Median: ", 0
@@ -49,45 +52,132 @@ INCLUDE Irvine32.inc
 ; --------------------
 main PROC
 
-    ; Initialize random number generator
+    ;Initialize random number generator
     call            Randomize
 
-    ; Program instroduction
+    ;Program instroduction
     push            OFFSET programTitle
     push            OFFSET programmerName
     push            OFFSET programInfo
     call            introduction
+
+    ;Fill array with randomly generated numbers
+    push            OFFSET array
+    push            OFFSET LO
+    push            OFFSET HI
+    push            OFFSET ARRAYSIZE
+    call            fillArray
+
+    ;Display unsorted array to the console
+    push            OFFSET unsortedTitle
+    push            OFFSET ARRAYSIZE
+    push            OFFSET array
+    call            displayList
+
+
 
     exit
 main ENDP
 
 
 introduction PROC
-    ; Set stack frame
+    ;Set stack frame
     push            ebp
     mov             ebp, esp
 
-    ; Print program title
+    ;Print program title
     mov             edx, [ebp + 16]
     call            WriteString
     call            CRLF
 
-    ; Print program author name
+    ;Print program author name
     mov             edx, [ebp + 12]
     call            WriteString
     call            CRLF
 
-    ; Print program's description
+    ;Print program's description
     mov             edx, [ebp + 8]
     call            WriteString
     call            CRLF
 
 
-    ; Restore the stack
+    ;Restore the stack
     pop             ebp
 
-    ret             8
+    ret             12
 introduction ENDP
+
+
+fillArray PROC
+    ;Set stack frame
+    push            ebp
+    mov             ebp, esp
+
+    mov             ecx, [ebp + 8]  ;Array size
+    mov             esi, [ebp + 20] ;Acutal array
+
+    nextNum:
+
+        mov             eax, [ebp + 12]
+        sub             eax, [ebp + 16]
+        inc             eax
+        call            RandomRange
+        add             eax, [ebp + 16]
+
+        mov             [esi], eax
+        add             esi, 4
+        loop            nextNum
+
+
+    pop             ebp
+    ret             12
+fillArray ENDP
+
+displayList PROC
+    ;Set stack fram
+    push            ebp
+    mov             ebp, esp
+
+    mov             edx, [ebp + 16] ;Title
+    call            CRLF
+    call            WriteString
+    call            CRLF
+
+    mov             ecx, [ebp + 12] ;Size
+    mov             esi, [ebp + 8] ;List
+
+    mov             numbersInLine, 0
+
+    beginLoop:
+
+        mov             eax, [esi]
+        call            WriteDec
+        mov             edx, OFFSET spaces
+        call            WriteString
+        inc             numbersInLine
+
+        mov             edx, 0
+        mov             eax, numbersInLine
+        mov             ebx, 10
+        div             ebx
+        cmp             ebx, 0
+
+        jne             endLoop
+        
+        call            CRLF
+
+    endLoop:
+        add             esi, 4
+        loop            beginLoop
+
+    call            CRLF
+    call            CRLF
+
+    pop             ebp
+    ret             12
+
+
+displayList ENDP
 
 
 END main

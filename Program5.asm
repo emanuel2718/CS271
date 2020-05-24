@@ -31,6 +31,16 @@ INCLUDE Irvine32.inc
                     BYTE    " then displays the number of instances of each"
                     BYTE    " generated value.", 0
 
+    array           DWORD   ARRAYSIZE DUP(0)
+    tempArray       DWORD   ARRAYSIZE DUP(0)
+
+    unsortedTitle   BYTE    "Your unsorted random numbers:",0
+    sortedTitle     BYTE    "Your sorted random numbers:",0
+    medianTitle     BYTE    "List Median: ", 0
+    instanceTitle   BYTE    "Tour list of instances of each generated number", 0
+
+
+
 
 .code
 
@@ -73,7 +83,9 @@ introduction PROC
     call            CRLF
 
 
+    ; Restore the stack
     pop             ebp
+
     ret             8
 introduction ENDP
 

@@ -13,15 +13,22 @@ TITLE Program 5     (Program4.asm)
 INCLUDE Irvine32.inc
 
 .const
-    ; Range [1 .. 400]
-    LOWER_RANGE     EQU     1
-    UPPER_RANGE     EQU     400
+    ; Range [10 .. 20]
+    LO              EQU     10
+    HI              EQU     29
+
+    ARRAYSIZE       EQU     200
 
 .data
     ; Introduction and program instructions
-    welcome         BYTE    "Composite Numbers   Programmed by Emanuel Ramirez", 0
-    programInfo     BYTE    "Enter the number of composites numbers you would "
-                    BYTE    "like to see.", 0
+    programTitle    BYTE    "Sorting and Counting Random Integers", 0
+    programmerName  BYTE    "                Programmed by Emanuel Ramirez", 0
+    programInfo     BYTE    "This program generates 200 random numbers in "
+                    BYTE    "the range [10 ... 29], displays the original "
+                    BYTE    "list, sorts the list, displays the median "
+                    BYTE    "value, displays the lsit sorted in ascending "
+                    BYTE    "order, then displays the number of instances "
+                    BYTE    "of each generated value", 0
 
 
 .code
@@ -36,6 +43,14 @@ main ENDP
 
 
 introduction PROC
+    mov             edx, OFFSET programTitle
+    call            WriteString
+    mov             edx, OFFSET programmerName
+    call            WriteString
+    call            CRLF
+    mov             edx, OFFSET programInfo
+    call            WriteString
+    call            CRLF
     ret
 introduction ENDP
 

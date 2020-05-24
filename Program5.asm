@@ -76,6 +76,11 @@ main PROC
     push            OFFSET array
     call            displayList
 
+    ;Find median of list
+    push            OFFSET array
+    push            OFFSET ARRAYSIZE
+    call            displayMedian
+
 
 
     exit
@@ -186,6 +191,37 @@ displayList PROC
 
 
 displayList ENDP
+
+displayMedian PROC
+
+
+    ;Set stack fram
+    push            ebp
+    mov             ebp, esp
+
+
+
+    mov             eax, [ebp + 8] ;ARRAYSIZE
+    mov             esi, [ebp + 12] ;Array
+
+    mov             ebx, 4
+    mul             ebx
+    add             esi, eax
+    mov             eax, [esi]
+    add             eax, [esi - 4]
+    mov             edx, 0
+    mov             ebx, 2
+    div             ebx
+
+    mov             edx, OFFSET medianTitle
+    call            WriteString
+    call            WriteDec
+    call            CRLF
+
+    pop             ebp
+    ret             8
+
+displayMedian ENDP
 
 
 END main

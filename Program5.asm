@@ -44,7 +44,7 @@ INCLUDE Irvine32.inc
     medianTitle     BYTE    "List Median: ", 0
     instanceTitle   BYTE    "Tour list of instances of each generated number", 0
 
-    exitMessage     BYTE    "Goodbye, and thanks for using my program.", 0
+    exitMessage     BYTE    "Goodbye, and thanks for using my program!", 0
 
 
 

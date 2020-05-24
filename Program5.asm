@@ -7,7 +7,7 @@ TITLE Program 5     (Program4.asm)
 ; Course number/section : 271/400
 ; Project Number        : 05
 ; Due Date:             : 05/24/2020
-; Description           : Sorting random numbers.
+; Description           : Sorting random numbers and counting instances.
 
 
 INCLUDE Irvine32.inc
@@ -367,26 +367,40 @@ countList PROC
         cmp             ebx, eax
         je              increaseCounter
 
-        mov             ebx, eax
-        add             esi, 4
-        mov             temp, eax
-        mov             eax, counter
-        mov             edx, OFFSET counter
-        call            WriteDec
-        mov             eax, temp
+
+        cmp             ebx, [ebp + 16]
+        jg              addOne
+        jmp             printCounter
+
+        ;If not first element then add one to the counter
+        addOne:
+            inc             counter
+
+        ;Print the current number instance counter
+        printCounter:
+
+            mov             ebx, eax
+            add             esi, 4
+            mov             temp, eax
+            mov             eax, counter
+            mov             edx, OFFSET counter
+            call            WriteDec
+            mov             eax, temp
 
 
 
-        mov             edx, OFFSET spaces
-        call            WriteString
-        mov             counter, 0
-        loop            nextNumber
+            mov             edx, OFFSET spaces
+            call            WriteString
+            mov             counter, 0
 
+        ;Increase the current number instance counter
         increaseCounter:
             mov             ebx, eax
             inc             counter
             add             esi, 4
-            loop            nextNumber
+
+        loop            nextNumber
+
 
     call            CRLF
     call            CRLF

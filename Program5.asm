@@ -44,6 +44,8 @@ INCLUDE Irvine32.inc
     medianTitle     BYTE    "List Median: ", 0
     instanceTitle   BYTE    "Tour list of instances of each generated number", 0
 
+    exitMessage     BYTE    "Goodbye, and thanks for using my program.", 0
+
 
 
 
@@ -91,6 +93,9 @@ main PROC
     push            OFFSET ARRAYSIZE
     push            OFFSET array
     call            displayList
+
+    ; Display exit message
+    call            farewell
 
 
 
@@ -323,6 +328,13 @@ displayMedian PROC
     ret             8
 
 displayMedian ENDP
+
+farewell PROC
+    mov             edx, OFFSET exitMessage
+    call            WriteString
+    call            CRLF
+    exit
+farewell ENDP
 
 
 END main

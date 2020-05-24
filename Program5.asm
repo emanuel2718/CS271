@@ -61,9 +61,14 @@ INCLUDE Irvine32.inc
 
 .code
 
-; --------------------
-; Main procedure
-; --------------------
+;------------------------------------------------------------
+; Procedure: main
+; Description: program driver
+; Receives: none
+; Returns: none
+; Requires: Randomize
+; Registers changed: none
+;------------------------------------------------------------
 main PROC
 
     ;Initialize random number generator
@@ -118,6 +123,14 @@ main PROC
 main ENDP
 
 
+;------------------------------------------------------------
+; Procedure: introduction
+; Description: prints program header and description
+; Receives: programTitle, programmerName, programInfo
+; Returns: none
+; Requires: none
+; Registers changed: edx, ebp, esp
+;------------------------------------------------------------
 introduction PROC
     ;Set stack frame
     push            ebp

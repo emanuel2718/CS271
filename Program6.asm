@@ -27,11 +27,12 @@ INCLUDE Irvine32.inc
     programDescription0     BYTE    "Please provide 10 signed decimal integers", 0
 
     programDescription1     BYTE    "Each number needs to be small enough to fit "
-                            BYTE    "inside a 32 bit register", 0
+                            BYTE    "inside a 32 bit register.", 0
 
     programDescription2     BYTE    "After you have finished inputting the raw numbers "
-                            BYTE    "I will display a list of the integers, "
-                            BYTE    "their sum, and their average value", 0
+                            BYTE    "I will display a list ", 0
+
+    programDescription3     BYTE    "of the integers their sum, and their average value", 0
 
     askForNumber            BYTE    "Please enter a signed number: ", 0
 
@@ -47,6 +48,17 @@ INCLUDE Irvine32.inc
     averageOfNumbers        BYTE    "The rounded average is: ", 0
 
     exitMessage             BYTE    "Thanks for playing!", 0
+
+
+    ; Array and input variables
+
+
+    array                   DWORD   ARRAYSIZE DUP(?)
+    inputLength             DWORD   0
+    counter                 DWORD   0
+    sum                     DWORD   0
+
+    userInput               BYTE    20  DUP (0)
 
 
     
@@ -99,6 +111,8 @@ ENDM
 ;------------------------------------------------------------
 main PROC
 
+    call                    introduction
+
 
     exit
 main ENDP
@@ -113,7 +127,26 @@ main ENDP
 ; Registers changed: 
 ;------------------------------------------------------------
 introduction PROC
+    macroDisplayString      programTitle
+    call                    CRLF
+    macroDisplayString      programmerName
+    call                    CRLF
+    call                    CRLF
+    macroDisplayString      programDescription0
+    call                    CRLF
+    macroDisplayString      programDescription1
+    call                    CRLF
+    macroDisplayString      programDescription2
+    call                    CRLF
+    macroDisplayString      programDescription3
+    call                    CRLF
+    call                    CRLF
+
+
+    ret
 introduction ENDP
+
+
 
 
 

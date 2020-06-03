@@ -15,7 +15,9 @@ INCLUDE Irvine32.inc
 .const
 
     ;Size of the array
-    ARRAYSIZE               EQU     200
+    ARRAYSIZE               EQU     10
+
+
 
 .data
     ;Introduction and program instructions
@@ -48,6 +50,38 @@ INCLUDE Irvine32.inc
 
 
     
+;--------------------------------------
+; Macro: Display message to the console
+; Receives: a string
+; Returns: outputs the string to the console
+;--------------------------------------
+macroDisplayString   MACRO   string
+
+    push                    edx
+    mov                     edx, OFFSET string
+    call                    WriteString
+    pop                     edx
+
+ENDM
+
+
+;--------------------------------------
+; Macro: Get number from user
+; Receives: var, string
+; Registers changed: ecx, edx
+;--------------------------------------
+macroGetString      MACRO   var, string
+
+    push                    ecx
+    push                    edx
+    macroDisplayString      string
+    mov                     edx, OFFSET var
+    mov                     ecx, (SIZEOF var) - 1
+    call                    ReadString
+    pop                     edx
+    pop                     ecx
+
+ENDM
     
     
 

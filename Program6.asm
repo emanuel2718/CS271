@@ -15,12 +15,41 @@ INCLUDE Irvine32.inc
 .const
 
     ;Size of the array
-    ARRAYSIZE       EQU     200
+    ARRAYSIZE               EQU     200
 
 .data
     ;Introduction and program instructions
-    programTitle    BYTE    "PROGRAMMING ASSIGNMENT 6: Designing low-level I/O procedures", 0
-    programmerName  BYTE    "Written by: Emanuel Ramirez", 0
+    programTitle            BYTE    "PROGRAMMING ASSIGNMENT 6: Designing low-level I/O procedures", 0
+    programmerName          BYTE    "Written by: Emanuel Ramirez", 0
+
+    programDescription0     BYTE    "Please provide 10 signed decimal integers", 0
+
+    programDescription1     BYTE    "Each number needs to be small enough to fit "
+                            BYTE    "inside a 32 bit register", 0
+
+    programDescription2     BYTE    "After you have finished inputting the raw numbers "
+                            BYTE    "I will display a list of the integers, "
+                            BYTE    "their sum, and their average value", 0
+
+    askForNumber            BYTE    "Please enter a signed number: ", 0
+
+    errorMessage            BYTE    "ERROR: You did not enter a signed number or "
+                            BYTE    "your number was too big", 0
+
+    tryAgain                BYTE    "Please try again: ", 0
+    
+    
+    numbersEntered          BYTE    "You entered the following numbers: ", 0
+
+    sumOfNumbers            BYTE    "The sum of these numbers is: ", 0
+    averageOfNumbers        BYTE    "The rounded average is: ", 0
+
+    exitMessage             BYTE    "Thanks for playing!", 0
+
+
+    
+    
+    
 
 
 

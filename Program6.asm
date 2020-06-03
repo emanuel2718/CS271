@@ -40,7 +40,8 @@ INCLUDE Irvine32.inc
                             BYTE    "your number was too big", 0
 
     tryAgain                BYTE    "Please try again: ", 0
-    
+    commaCharacter          BYTE    ", ", 0
+
     
     numbersEntered          BYTE    "You entered the following numbers: ", 0
 
@@ -112,6 +113,24 @@ ENDM
 main PROC
 
     call                    introduction
+    mov                     ecx, ARRAYSIZE
+
+    fillArray:
+    push                    OFFSET array
+    push                    counter
+    call                    readVal
+    inc                     counter
+    loop                    fillArray
+    call                    CRLF
+
+    macroDisplayString      numbersEntered
+
+    push                    OFFSET array
+    push                    ARRAYSIZE
+    call                    writeVal
+    call                    CRLF
+
+
 
 
     exit
@@ -120,11 +139,8 @@ main ENDP
 
 ;------------------------------------------------------------
 ; Procedure: introduction
-; Description: 
-; Receives: 
-; Returns: 
-; Requires: 
-; Registers changed: 
+; Description: introduces the program to the user
+; Registers changed: edx
 ;------------------------------------------------------------
 introduction PROC
     macroDisplayString      programTitle
@@ -145,6 +161,126 @@ introduction PROC
 
     ret
 introduction ENDP
+
+
+;--------------------------------------------------------------------
+; Procedure: readVal
+; Description: gets the user string of digits a converts the string to numeric
+;--------------------------------------------------------------------
+readVal PROC
+    pushad
+    ;push                    ebp
+    mov                     ebp, esp
+
+    goTop:
+    ;mov                     eax, [ebp + 36]
+    ;add                     eax, 1
+    ;call                    WriteDec
+    macroGetString          userInput, askForNumber 
+
+    jmp                     validateNumber
+
+    getNumber:
+    macroGetString          userInput, errorMessage
+    macroGetString          userInput, tryAgain
+
+
+    validateNumber:
+    mov                     inputLength, eax 
+    mov                     ecx, eax
+    mov                     esi, OFFSET userInput
+    mov                     edi, OFFSET numbersEntered
+
+
+    count:
+    lodsb
+    cmp                     al, 48
+    jl                      badInput
+    cmp                     al, 57
+    jg                      badInput
+    loop                    count
+    jmp                     goodInput
+
+    badInput:
+    jmp                     getNumber
+
+
+    goodInput:
+    mov                     edx, OFFSET userInput
+    mov                     ecx, inputLength
+    call                    ParseDecimal32
+
+
+    .IF                     CARRY?
+    jmp                     badInput
+    .ENDIF
+
+
+    mov                     edx, [ebp + 40]
+    mov                     ebx, [ebp + 36]
+    imul                    ebx, 4
+    mov                     [edx + ebx], eax
+
+
+    finishReading:
+    popad
+    ret                     12
+
+readVal ENDP
+
+writeVal PROC
+    push                    ebp
+    mov                     ebp, esp
+    mov                     edi, [ebp + 12]
+    mov                     ecx, [ebp + 8]
+
+    writer:
+    mov                     eax, [edi]
+    call                    WriteDec
+    cmp                     ecx, 1
+    je                      looper
+
+    macroDisplayString      commaCharacter
+
+    add                     edi, 4
+
+    ; No comma needed
+    looper:
+    loop                    writer
+
+    pop                     ebp
+    ret                     8
+
+
+writeVal ENDP
+
+
+calculateSum PROC
+    push                    ebp
+    mov                     ebp, esp
+    mov                     edi, [ebp + 16]
+    mov                     ecx, [ebp + 12]
+    mov                     ebx, [ebp + 8]
+
+    looper:
+    mov                     eax, [edi]
+    add                     ebx, eax
+    add                     edi, 4
+
+    loop                    looper
+
+
+    macroDisplayString      sumOfNumbers
+
+    mov                     eax, ebx
+    call                    WriteDec
+    call                    CRLF
+    mov                     sum, ebx
+
+    pop                     ebp
+    ret                     8
+
+calculateSum ENDP
 
 
 

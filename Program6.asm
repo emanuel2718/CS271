@@ -17,6 +17,17 @@ INCLUDE Irvine32.inc
     ;Size of the array
     ARRAYSIZE               EQU     10
 
+    ;Range of signed 32 integers values
+    MAX_NEG_NUMBER          EQU     2147483648
+    MAX_POS_NUMBER          EQU     2147483647
+
+    ;ASCII codes
+    ZERO_ASCII              EQU     48
+    NINE_ASCII              EQU     57
+
+    MINUS_ASCII             EQU     45
+    PLUS_ASCII              EQU     43
+
 
 
 .data

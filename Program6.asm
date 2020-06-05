@@ -214,6 +214,7 @@ readVal PROC
 
     count:
     lodsb
+    ;jo                      badInput
     cmp                     al, MINUS_ASCII
     je                      negativeNumber
     cmp                     al, PLUS_ASCII
@@ -238,6 +239,9 @@ readVal PROC
 
 
     badInput:
+    ; Clear overflow flag if necesary
+    mov                     ax, 1
+    inc                     ax
     jmp                     getNumber
 
 
@@ -252,6 +256,7 @@ readVal PROC
     ;.ENDIF
 
 
+    jo                      badInput
     .IF                     CARRY?
     jmp                     badInput
     .ENDIF

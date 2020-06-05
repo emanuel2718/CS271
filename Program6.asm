@@ -2,7 +2,7 @@ TITLE Program 6     (Program4.asm)
 
 ; Author                : Emanuel Ramirez Alsina
 ; Date Created          : 05/30/2020
-; Last Modified:        : 06/03/2020
+; Last Modified:        : 06/05/2020
 ; OSU email address:    : ramieman@oregonstate.edu
 ; Course number/section : 271/400
 ; Project Number        : 06
@@ -151,11 +151,10 @@ main PROC
 
     call                    CRLF
     call                    CRLF
+
     macroDisplayString      exitMessage
+
     call                    CRLF
-
-
-
 
     exit
 main ENDP
@@ -196,13 +195,9 @@ introduction ENDP
 ;--------------------------------------------------------------------------------------
 readVal PROC
     pushad
-    ;push                    ebp
     mov                     ebp, esp
 
     goTop:
-    ;mov                     eax, [ebp + 36]
-    ;add                     eax, 1
-    ;call                    WriteDec
     macroGetString          userInput, askForNumber 
 
     jmp                     validateNumber
@@ -233,7 +228,6 @@ readVal PROC
     jmp                     goodInput
 
     negativeNumber:
-    ;mov                     al, PLUS_ASCII
     cmp                     ecx, inputLength    ;If found a (-) after first element
     jne                     badInput
     mov                     sign, MINUS_ASCII
@@ -249,24 +243,18 @@ readVal PROC
 
 
     badInput:
-    ; Clear overflow flag if necesary
-    ;mov                     ax, 1
-    ;inc                     ax
     jmp                     getNumber
 
 
     goodInput:
     mov                     edx, OFFSET userInput
     mov                     ecx, inputLength
-    ;.IF                     SIGN?
     cmp                     al, MINUS_ASCII
     call                    ParseInteger32
-    ;.ELSE
-    ;call                    ParseDecimal32
-    ;.ENDIF
 
 
     jo                      badInput
+
     .IF                     CARRY?
     jmp                     badInput
     .ENDIF
@@ -282,10 +270,7 @@ readVal PROC
     jmp                     finish
 
     negate:
-    ;mul                     eax, -1
     neg                     eax
-    ;xor                     eax, eax
-    ;sub                     eax, edx
 
     finish:
     mov                     sign, 0
@@ -319,11 +304,9 @@ writeVal PROC
     mov                     eax, [edi]
     cmp                     eax, 0
     jl                      negative
-    ;jmp                     positive
 
     positive:
     call                    WriteDec
-    ;cmp                     ecx, 1
     jmp                     comma
 
     negative:
@@ -331,7 +314,6 @@ writeVal PROC
     mov                     al, MINUS_ASCII
     call                    WriteChar
     pop                     eax
-    ;neg                     eax
     cdq
     xor                     eax, edx
     sub                     eax, edx

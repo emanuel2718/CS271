@@ -263,7 +263,7 @@ readVal PROC
 
     negate:
     ;mul                     eax, -1
-    ;neg                     eax
+    neg                     eax
     ;xor                     eax, eax
     ;sub                     eax, edx
 
@@ -291,24 +291,38 @@ writeVal PROC
     mov                     eax, [edi]
     cmp                     eax, 0
     jl                      negative
-    jmp                     positive
-
-    negative:
-    call                    WriteInt
+    ;jmp                     positive
 
     positive:
     call                    WriteDec
+    ;cmp                     ecx, 1
+    jmp                     comma
+
+    negative:
+    push                    eax
+    mov                     al, MINUS_ASCII
+    call                    WriteChar
+    pop                     eax
+    ;neg                     eax
+    cdq
+    xor                     eax, edx
+    sub                     eax, edx
+    call                    WriteDec
+
+
+
+    comma:
     cmp                     ecx, 1
-    je                      looper
-
+    je                      finish
     macroDisplayString      commaCharacter
-
     add                     edi, 4
 
     ; No comma needed
     looper:
     loop                    writer
 
+
+    finish:
     pop                     ebp
     ret                     8
 

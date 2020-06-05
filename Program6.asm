@@ -156,6 +156,11 @@ main PROC
     push                    sum
     call                    calculateAverage
 
+    call                    CRLF
+    call                    CRLF
+    macroDisplayString      exitMessage
+    call                    CRLF
+
 
 
 

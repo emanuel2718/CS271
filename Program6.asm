@@ -53,6 +53,7 @@ INCLUDE Irvine32.inc
     tryAgain                BYTE    "Please try again: ", 0
     commaCharacter          BYTE    ", ", 0
 
+
     
     numbersEntered          BYTE    "You entered the following numbers: ", 0
 
@@ -65,12 +66,15 @@ INCLUDE Irvine32.inc
     ; Array and input variables
 
 
-    array                   DWORD   ARRAYSIZE DUP(?)
+    array                   SDWORD  ARRAYSIZE DUP(?)
+    ;sign                    DWORD   ARRAYSIZE DUP(?)
     inputLength             DWORD   0
     counter                 DWORD   0
     sum                     DWORD   0
 
-    userInput               BYTE    20  DUP (0)
+    sign                    BYTE    ?
+
+    userInput               SDWORD  20  DUP (0)
 
 
     
@@ -205,12 +209,28 @@ readVal PROC
 
     count:
     lodsb
-    cmp                     al, 48
+    cmp                     al, MINUS_ASCII
+    je                      negativeNumber
+    cmp                     al, PLUS_ASCII
+    je                      negativeNumber
+    cmp                     al, ZERO_ASCII
     jl                      badInput
-    cmp                     al, 57
+    cmp                     al, NINE_ASCII
     jg                      badInput
     loop                    count
     jmp                     goodInput
+
+    negativeNumber:
+    ;mov                     al, PLUS_ASCII
+    mov                     sign, MINUS_ASCII
+    loop                    count
+    jmp                     goodInput
+
+    positiveNumber:
+    loop                    count
+    jmp                     goodInput
+
+
 
     badInput:
     jmp                     getNumber
@@ -219,7 +239,12 @@ readVal PROC
     goodInput:
     mov                     edx, OFFSET userInput
     mov                     ecx, inputLength
-    call                    ParseDecimal32
+    ;.IF                     SIGN?
+    cmp                     al, MINUS_ASCII
+    call                    ParseInteger32
+    ;.ELSE
+    ;call                    ParseDecimal32
+    ;.ENDIF
 
 
     .IF                     CARRY?
@@ -227,6 +252,23 @@ readVal PROC
     .ENDIF
 
 
+    ; Convert to positive number if it was negative
+    cdq
+    xor                     eax, edx
+    sub                     eax, edx
+
+    cmp                     sign, MINUS_ASCII
+    je                      negate
+    jmp                     finish
+
+    negate:
+    ;mul                     eax, -1
+    ;neg                     eax
+    ;xor                     eax, eax
+    ;sub                     eax, edx
+
+    finish:
+    mov                     sign, 0
     mov                     edx, [ebp + 40]
     mov                     ebx, [ebp + 36]
     imul                    ebx, 4
@@ -247,6 +289,14 @@ writeVal PROC
 
     writer:
     mov                     eax, [edi]
+    cmp                     eax, 0
+    jl                      negative
+    jmp                     positive
+
+    negative:
+    call                    WriteInt
+
+    positive:
     call                    WriteDec
     cmp                     ecx, 1
     je                      looper

@@ -194,7 +194,8 @@ introduction ENDP
 ; Registers changed: eax, ecx, edi, esi, ebp, ebx, al
 ;--------------------------------------------------------------------------------------
 readVal PROC
-    pushad
+    pushad ;Save registers
+
     mov                     ebp, esp
 
     goTop:
@@ -208,7 +209,7 @@ readVal PROC
 
 
     validateNumber:
-    mov                     inputLength, eax 
+    mov                     inputLength, eax
     mov                     ecx, eax
     mov                     esi, OFFSET userInput
     mov                     edi, OFFSET numbersEntered
@@ -216,9 +217,9 @@ readVal PROC
 
     count:
     lodsb
-    cmp                     al, MINUS_ASCII
+    cmp                     al, MINUS_ASCII     ;Check for negative sign
     je                      negativeNumber
-    cmp                     al, PLUS_ASCII
+    cmp                     al, PLUS_ASCII      ;Check for positive sign
     je                      positiveNumber
     cmp                     al, ZERO_ASCII
     jl                      badInput
@@ -243,9 +244,10 @@ readVal PROC
 
 
     badInput:
-    jmp                     getNumber
+    jmp                     getNumber           ;If input is not valid; try again
 
 
+    ;The input number is valid
     goodInput:
     mov                     edx, OFFSET userInput
     mov                     ecx, inputLength
@@ -253,14 +255,13 @@ readVal PROC
     call                    ParseInteger32
 
 
-    jo                      badInput
-
+    jo                      badInput            ;If doenst' fit inside 32 bit register
     .IF                     CARRY?
     jmp                     badInput
     .ENDIF
 
 
-    ; Convert to positive number if it was negative
+    ; Convert to absolute value (positive) number if it was negative
     cdq
     xor                     eax, edx
     sub                     eax, edx
@@ -350,9 +351,9 @@ writeVal ENDP
 calculateSum PROC
     push                    ebp
     mov                     ebp, esp
-    mov                     edi, [ebp + 16]
-    mov                     ecx, [ebp + 12]
-    mov                     ebx, [ebp + 8]
+    mov                     edi, [ebp + 16]         ;OFFSET of array
+    mov                     ecx, [ebp + 12]         ;ARRAYSIZE
+    mov                     ebx, [ebp + 8]          ;Sum
 
     looper:
     mov                     eax, [edi]
@@ -367,11 +368,11 @@ calculateSum PROC
     mov                     eax, ebx
     cmp                     eax, 0
     jl                      negativeSum
-    call                    WriteDec
+    call                    WriteDec                ;Write unsigned if positive
     jmp                     continue
 
     negativeSum:
-    call                    WriteInt
+    call                    WriteInt                ;Write signed if negative
 
     continue:
     call                    CRLF

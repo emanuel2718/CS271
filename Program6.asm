@@ -61,16 +61,17 @@ INCLUDE Irvine32.inc
     averageOfNumbers        BYTE    "The rounded average is: ", 0
 
     exitMessage             BYTE    "Thanks for playing!", 0
+    negativeSign            BYTE    "-", 0
 
 
     ; Array and input variables
 
 
     array                   SDWORD  ARRAYSIZE DUP(?)
-    ;sign                    DWORD   ARRAYSIZE DUP(?)
     inputLength             DWORD   0
     counter                 DWORD   0
-    sum                     DWORD   0
+    sum                     SDWORD  0
+    average                 SDWORD  0
 
     sign                    BYTE    ?
 
@@ -149,6 +150,11 @@ main PROC
     push                    ARRAYSIZE
     push                    sum
     call                    calculateSum
+
+
+    push                    average
+    push                    sum
+    call                    calculateAverage
 
 
 
@@ -240,8 +246,8 @@ readVal PROC
 
     badInput:
     ; Clear overflow flag if necesary
-    mov                     ax, 1
-    inc                     ax
+    ;mov                     ax, 1
+    ;inc                     ax
     jmp                     getNumber
 
 
@@ -374,6 +380,60 @@ calculateSum PROC
     ret                     8
 
 calculateSum ENDP
+
+
+calculateAverage PROC
+    push                    ebp
+    mov                     ebp, esp
+
+    macroDisplayString      averageOfNumbers
+
+    mov                     eax, [ebp + 8]
+    mov                     ebx, ARRAYSIZE
+    mov                     edx, 0 ;Will hold remainder
+
+    cmp                     eax, 0
+    jl                      convertToPositive
+    jmp                     dontConvert
+
+    convertToPositive:
+    mov                     sign, MINUS_ASCII
+    mov                     edx, OFFSET negativeSign
+    call                    WriteString
+    mov                     edx, 0
+    neg                     eax
+
+    dontConvert:
+    cdq
+    div                     ebx
+    cmp                     al, 0
+    je                      zeroed
+    jmp                     continue
+
+    zeroed:
+    add                     eax, 1
+    call                    WriteDec
+    jmp                     finish
+
+
+
+    continue:
+    cmp                     eax, 0
+    jl                      negativeAverage
+    call                    WriteDec
+    jmp                     finish
+
+
+    negativeAverage:
+    call                    WriteInt
+
+
+    finish:
+    pop                     ebp
+    ret                     8
+
+
+calculateAverage ENDP
 
 
 

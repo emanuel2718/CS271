@@ -225,11 +225,10 @@ readVal PROC
 
     count:
     lodsb
-    ;jo                      badInput
     cmp                     al, MINUS_ASCII
     je                      negativeNumber
     cmp                     al, PLUS_ASCII
-    je                      negativeNumber
+    je                      positiveNumber
     cmp                     al, ZERO_ASCII
     jl                      badInput
     cmp                     al, NINE_ASCII
@@ -239,11 +238,15 @@ readVal PROC
 
     negativeNumber:
     ;mov                     al, PLUS_ASCII
+    cmp                     ecx, inputLength    ;If found a (-) after first element
+    jne                     badInput
     mov                     sign, MINUS_ASCII
     loop                    count
     jmp                     goodInput
 
     positiveNumber:
+    cmp                     ecx, inputLength    ;If found a (+) after first element
+    jne                     badInput
     loop                    count
     jmp                     goodInput
 

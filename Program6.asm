@@ -145,6 +145,11 @@ main PROC
     call                    writeVal
     call                    CRLF
 
+    push                    OFFSET array
+    push                    ARRAYSIZE
+    push                    sum
+    call                    calculateSum
+
 
 
 
@@ -348,7 +353,15 @@ calculateSum PROC
     macroDisplayString      sumOfNumbers
 
     mov                     eax, ebx
+    cmp                     eax, 0
+    jl                      negativeSum
     call                    WriteDec
+    jmp                     continue
+
+    negativeSum:
+    call                    WriteInt
+
+    continue:
     call                    CRLF
     mov                     sum, ebx
 

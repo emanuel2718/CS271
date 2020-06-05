@@ -21,16 +21,18 @@ INCLUDE Irvine32.inc
     MAX_NEG_NUMBER          EQU     2147483648
     MAX_POS_NUMBER          EQU     2147483647
 
-    ;ASCII codes
+    ;ASCII codes for 0 and 9
     ZERO_ASCII              EQU     48
     NINE_ASCII              EQU     57
 
+    ;ASCII codes for + and - signs
     MINUS_ASCII             EQU     45
     PLUS_ASCII              EQU     43
 
 
 
 .data
+
     ;Introduction and program instructions
     programTitle            BYTE    "PROGRAMMING ASSIGNMENT 6: Designing low-level I/O procedures", 0
     programmerName          BYTE    "Written by: Emanuel Ramirez", 0
@@ -51,31 +53,23 @@ INCLUDE Irvine32.inc
                             BYTE    "your number was too big", 0
 
     tryAgain                BYTE    "Please try again: ", 0
+
     commaCharacter          BYTE    ", ", 0
-
-
-    
     numbersEntered          BYTE    "You entered the following numbers: ", 0
-
     sumOfNumbers            BYTE    "The sum of these numbers is: ", 0
     averageOfNumbers        BYTE    "The rounded average is: ", 0
-
     exitMessage             BYTE    "Thanks for playing!", 0
     negativeSign            BYTE    "-", 0
 
 
     ; Array and input variables
-
-
     array                   SDWORD  ARRAYSIZE DUP(?)
+    userInput               SDWORD  20  DUP (0)
     inputLength             DWORD   0
     counter                 DWORD   0
     sum                     SDWORD  0
     average                 SDWORD  0
-
     sign                    BYTE    ?
-
-    userInput               SDWORD  20  DUP (0)
 
 
     
@@ -123,7 +117,6 @@ ENDM
 ; Description: program driver
 ; Receives: none
 ; Returns: none
-; Requires: 
 ; Registers changed: none
 ;------------------------------------------------------------
 main PROC
@@ -194,10 +187,13 @@ introduction PROC
 introduction ENDP
 
 
-;--------------------------------------------------------------------
+;--------------------------------------------------------------------------------------
 ; Procedure: readVal
-; Description: gets the user string of digits a converts the string to numeric
-;--------------------------------------------------------------------
+; Description: will read valid signed integers from the user and load them into an array
+; Receives: array and counter variable
+; Returns: raeds the values into the array
+; Registers changed: eax, ecx, edi, esi, ebp, ebx, al
+;--------------------------------------------------------------------------------------
 readVal PROC
     pushad
     ;push                    ebp
@@ -305,6 +301,14 @@ readVal PROC
 
 readVal ENDP
 
+
+;------------------------------------------------------------------------------------
+; Procedure: writeVal
+; Description: convert numbers into string of digits and display them on the console
+; Receives: array of values and size of the array
+; Returns: write of 10 valid signed integers inputted from user to the console
+; Registers changed: eax, ecx, edi, ebp, al
+;------------------------------------------------------------------------------------
 writeVal PROC
     push                    ebp
     mov                     ebp, esp
@@ -354,6 +358,13 @@ writeVal PROC
 writeVal ENDP
 
 
+;----------------------------------------------------------------------
+; Procedure: calculateSum
+; Description: calculate the sum of the 10 signed integers in the array
+; Receives: array, arraySize and the sum variable
+; Returns: the calculated sum of the 10 signed integers
+; Registers changed: eax, ebx, ecx, edi, ebp
+;----------------------------------------------------------------------
 calculateSum PROC
     push                    ebp
     mov                     ebp, esp
@@ -390,6 +401,13 @@ calculateSum PROC
 calculateSum ENDP
 
 
+;------------------------------------------------------------
+; Procedure: calculateAverage
+; Description: calculates the average of the 10 signed integers
+; Receives: avergage and sum variables
+; Returns: the average of the numbers
+; Registers changed: eax, ebx, edx, ebp, al
+;------------------------------------------------------------
 calculateAverage PROC
     push                    ebp
     mov                     ebp, esp
@@ -440,12 +458,7 @@ calculateAverage PROC
     pop                     ebp
     ret                     8
 
-
 calculateAverage ENDP
-
-
-
-
 
 
 END main

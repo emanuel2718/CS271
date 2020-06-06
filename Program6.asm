@@ -204,7 +204,8 @@ readVal PROC
     jmp                     validateNumber
 
     getNumber:
-    macroGetString          userInput, errorMessage
+    macroDisplayString      errorMessage
+    call                    CRLF
     macroGetString          userInput, tryAgain
 
 

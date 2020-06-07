@@ -2,7 +2,7 @@ TITLE Program 6     (Program4.asm)
 
 ; Author                : Emanuel Ramirez Alsina
 ; Date Created          : 05/30/2020
-; Last Modified:        : 06/05/2020
+; Last Modified:        : 06/06/2020
 ; OSU email address:    : ramieman@oregonstate.edu
 ; Course number/section : 271/400
 ; Project Number        : 06
@@ -11,6 +11,40 @@ TITLE Program 6     (Program4.asm)
 
 
 INCLUDE Irvine32.inc
+
+;--------------------------------------
+; Macro: Display message to the console
+; Receives: a string
+; Returns: outputs the string to the console
+;--------------------------------------
+macroDisplayString   MACRO   string
+
+    push                    edx
+    mov                     edx, OFFSET string
+    call                    WriteString
+    pop                     edx
+
+ENDM
+
+
+;--------------------------------------
+; Macro: Get number from user
+; Receives: var, string
+; Registers changed: ecx, edx
+;--------------------------------------
+macroGetString      MACRO   var, string
+
+    push                    ecx
+    push                    edx
+    macroDisplayString      string
+    mov                     edx, OFFSET var
+    mov                     ecx, (SIZEOF var) - 1
+    call                    ReadString
+    pop                     edx
+    pop                     ecx
+
+ENDM
+
 
 .const
 
@@ -70,43 +104,6 @@ INCLUDE Irvine32.inc
     sum                     SDWORD  0
     average                 SDWORD  0
     sign                    BYTE    ?
-
-
-    
-;--------------------------------------
-; Macro: Display message to the console
-; Receives: a string
-; Returns: outputs the string to the console
-;--------------------------------------
-macroDisplayString   MACRO   string
-
-    push                    edx
-    mov                     edx, OFFSET string
-    call                    WriteString
-    pop                     edx
-
-ENDM
-
-
-;--------------------------------------
-; Macro: Get number from user
-; Receives: var, string
-; Registers changed: ecx, edx
-;--------------------------------------
-macroGetString      MACRO   var, string
-
-    push                    ecx
-    push                    edx
-    macroDisplayString      string
-    mov                     edx, OFFSET var
-    mov                     ecx, (SIZEOF var) - 1
-    call                    ReadString
-    pop                     edx
-    pop                     ecx
-
-ENDM
-    
-    
 
 
 
@@ -257,9 +254,10 @@ readVal PROC
 
 
     jo                      badInput            ;If doenst' fit inside 32 bit register
-    .IF                     CARRY?
-    jmp                     badInput
-    .ENDIF
+    jc                      badInput
+    ;.IF                     CARRY?
+    ;jmp                     badInput
+    ;.ENDIF
 
 
     ; Convert to absolute value (positive) number if it was negative
@@ -400,7 +398,7 @@ calculateAverage PROC
 
     mov                     eax, [ebp + 8]
     mov                     ebx, ARRAYSIZE
-    mov                     edx, 0 ;Will hold remainder
+    mov                     edx, 0 ;Remainder
 
     cmp                     eax, 0
     jl                      convertToPositive

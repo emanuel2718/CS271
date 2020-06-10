@@ -2,4 +2,4 @@
 
 ### TODO
 
-Add descriptions of the projects in a nice layout.
+#Add descriptions of the projects in a nice layout.
